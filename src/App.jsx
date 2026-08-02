@@ -64,6 +64,12 @@ export default function App() {
     setView('login');
   };
 
+  const handleResetScore = () => {
+    const startingScore = student?.character?.id === 'phoenix' ? 120 : 100;
+    setScore(startingScore);
+    saveProgress(startingScore, unlockedLevel, completedLevels);
+  };
+
   const handleSelectLevel = (level) => {
     setActiveLevel(level);
     setView('game');
@@ -157,6 +163,7 @@ export default function App() {
           student={student}
           score={score}
           onUpdateScore={handleUpdateScore}
+          onResetScore={handleResetScore}
           onBackToMap={() => setView('board')}
           onLevelCompleted={handleLevelCompleted}
         />

@@ -151,7 +151,7 @@ const levelBriefings = {
   }
 };
 
-export default function GameArea({ level, student, score, onUpdateScore, onBackToMap, onLevelCompleted }) {
+export default function GameArea({ level, student, score, onUpdateScore, onResetScore, onBackToMap, onLevelCompleted }) {
   const [currentMissionIdx, setCurrentMissionIdx] = useState(0);
   const [wrongAttempts, setWrongAttempts] = useState(0);
   const [hintsUsed, setHintsUsed] = useState(0);
@@ -1035,6 +1035,53 @@ export default function GameArea({ level, student, score, onUpdateScore, onBackT
         )}
 
       </div>
+
+      {/* GAME OVER MODAL (WHEN SCORE REACHES 0) */}
+      {score <= 0 && (
+        <div className="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-[#fdf5dd] border-8 border-red-800 rounded-[40px] p-6 md:p-8 max-w-md w-full text-center shadow-2xl border-b-16 border-b-red-950 relative animate-in fade-in zoom-in-95 duration-200">
+            <div className="w-24 h-24 mx-auto mb-4 bg-red-100 border-4 border-red-500 rounded-full flex items-center justify-center text-5xl shadow-xl animate-pulse">
+              💥
+            </div>
+            <h3 className="text-2xl md:text-3xl font-black text-red-950 mb-2 uppercase tracking-wide">
+              พลังเวทมนตร์หมดสิ้น!
+            </h3>
+            <p className="text-sm md:text-base font-bold text-amber-900 mb-6 leading-relaxed">
+              พลังเวทของ <span className="text-red-700 font-extrabold">{student.name}</span> ลดลงเหลือ <span className="text-red-600 font-black">0 🔮</span> เนื่องจากตอบคาถาล้มเหลวหลายครั้ง
+              <br />
+              กรุณารีเซ็ตพลังเวทเพื่อฟื้นฟูและเริ่มลองใหม่อีกครั้ง!
+            </p>
+
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => {
+                  audio.playSuccess();
+                  if (onResetScore) onResetScore();
+                  setCurrentMissionIdx(0);
+                  setSortingActiveIdx(0);
+                  setDrawnCards([]);
+                  setPlacedCards([]);
+                  setFeedback(null);
+                }}
+                className="w-full py-4 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white font-black text-base rounded-2xl border-b-4 border-amber-800 shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                🔄 เติมพลังเวท 100 และสอบใหม่
+              </button>
+
+              <button
+                onClick={() => {
+                  audio.playClick();
+                  if (onResetScore) onResetScore();
+                  onBackToMap();
+                }}
+                className="w-full py-3 bg-white hover:bg-slate-100 text-slate-700 font-black text-sm rounded-2xl border-2 border-slate-300 shadow-sm active:scale-95 transition-all cursor-pointer"
+              >
+                🏠 กลับสู่แผนที่หลัก
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <HintPanel
         currentMission={activeMission}

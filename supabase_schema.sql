@@ -54,17 +54,23 @@ ON public.students FOR UPDATE
 TO anon, authenticated 
 USING (true);
 
--- Allow public read access to game_results
-CREATE POLICY "Allow public read access to game_results" 
-ON public.game_results FOR SELECT 
-TO anon, authenticated 
-USING (true);
-
 -- Allow public insert access to game_results
 CREATE POLICY "Allow public insert access to game_results" 
 ON public.game_results FOR INSERT 
 TO anon, authenticated 
 WITH CHECK (true);
+
+-- Allow public delete access to students
+CREATE POLICY "Allow public delete access to students" 
+ON public.students FOR DELETE 
+TO anon, authenticated 
+USING (true);
+
+-- Allow public delete access to game_results
+CREATE POLICY "Allow public delete access to game_results" 
+ON public.game_results FOR DELETE 
+TO anon, authenticated 
+USING (true);
 
 -- ========================================================
 -- SCHEMA CREATION SUCCESSFUL!

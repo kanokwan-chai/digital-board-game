@@ -25,10 +25,12 @@ export default function TeacherDashboard({ onClose }) {
     fetchData();
   }, []);
 
-  const handleResetData = () => {
-    if (confirm("คุณแน่ใจหรือไม่ว่าต้องการล้างข้อมูลผู้เล่นทั้งหมด? (การทำเช่นนี้จะลบนักเรียนและผลการเล่นทั้งหมดในโหมด Local)")) {
-      db.clearLocalData();
-      fetchData();
+  const handleResetData = async () => {
+    if (confirm("คุณแน่ใจหรือไม่ว่าต้องการล้างข้อมูลผู้เล่นทั้งหมด? (การทำเช่นนี้จะลบนักเรียนและผลการเล่นทั้งหมด)")) {
+      setLoading(true);
+      setStudents([]);
+      await db.clearAllData();
+      await fetchData();
     }
   };
 
