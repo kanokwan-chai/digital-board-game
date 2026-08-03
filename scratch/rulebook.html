@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>คู่มือกติกาเกม Logic Quest - วิชาตรรกศาสตร์เบื้องต้น ปวช.1</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Kanit:wght@400;600;700;800&display=swap');
+
+    @page {
+      size: A4;
+      margin: 12mm 15mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      color: #2d2415;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 0;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .header-banner {
+      background: linear-gradient(135deg, #4a3509 0%, #2b1f05 100%);
+      color: #ffffff;
+      padding: 24px 28px;
+      border-radius: 18px;
+      margin-bottom: 20px;
+      border: 3px solid #8c6d23;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      position: relative;
+    }
+
+    .header-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: #fbbf24;
+      margin: 0 0 4px 0;
+      letter-spacing: 0.5px;
+    }
+
+    .header-subtitle {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fef08a;
+      margin: 0;
+    }
+
+    .url-badge {
+      display: inline-block;
+      margin-top: 12px;
+      background-color: #ffffff;
+      color: #854d0e;
+      font-family: 'Kanit', sans-serif;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 13px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: #78350f;
+      border-bottom: 2.5px solid #f59e0b;
+      padding-bottom: 4px;
+      margin-top: 20px;
+      margin-bottom: 12px;
+      display: flex;
+      items-center;
+      gap: 8px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .card-box {
+      background-color: #fefce8;
+      border: 1.5px solid #fde047;
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+
+    .card-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: #854d0e;
+      margin-bottom: 4px;
+    }
+
+    .card-text {
+      font-size: 12px;
+      color: #451a03;
+      margin: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      margin-bottom: 16px;
+      font-size: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #d97706;
+    }
+
+    th {
+      background-color: #78350f;
+      color: #ffffff;
+      font-family: 'Kanit', sans-serif;
+      font-weight: 700;
+      padding: 8px 10px;
+      text-align: left;
+    }
+
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #fde68a;
+      background-color: #fffbeb;
+    }
+
+    tr:nth-child(even) td {
+      background-color: #fef3c7;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-green { background-color: #dcfce7; color: #166534; }
+    .badge-red { background-color: #fee2e2; color: #991b1b; }
+    .badge-amber { background-color: #fef3c7; color: #92400e; }
+
+    ul {
+      margin: 4px 0 12px 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    .footer {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 11px;
+      color: #92400e;
+      border-top: 1px dashed #d97706;
+      padding-top: 10px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-banner">
+    <div class="header-title">📜 กฎกติกาและคู่มือการใช้งาน - Logic Quest</div>
+    <div class="header-subtitle">คดีลับเมืองอาร์เคน | วิชาตรรกศาสตร์เบื้องต้น ระดับชั้น ปวช.1</div>
+    <div class="url-badge">🌐 เว็บไซต์ออนไลน์: https://digital-board-game-pwc.vercel.app</div>
+  </div>
+
+  <div class="section-title">🎯 1. วัตถุประสงค์ของเกม (Game Objectives)</div>
+  <p>นักเรียนจะรับบทเป็น <strong>นักสืบเวทมนตร์ประจำสำนักสืบสวนลับ</strong> เพื่อร่วมกันคลี่คลายคดีโจรกรรมธนาคารมนตราแห่งเมืองอาร์เคน โดยใช้ทักษะ <strong>การคิดเชิงคำนวณ (Computational Thinking)</strong> และ <strong>ตรรกศาสตร์เบื้องต้น</strong> ในการวิเคราะห์หลักฐาน คัดแยกประพจน์ และต่อวงจรตรรกศาสตร์เพื่อปลดล็อกเบาะแสและกู้คืนศิลานักปราชญ์</p>
+
+  <div class="section-title">⚔️ 2. นักสืบประจำหน่วย (4 ตัวละครพิเศษ)</div>
+  <div class="grid-2">
+    <div class="card-box">
+      <div class="card-title">🦉 อาร์กัส (นักสืบอาร์เคน)</div>
+      <div class="card-text">ใช้ Hint ใบ้คำตอบฟรี 1 ครั้งแรกของด่านโดยไม่เสียคะแนน</div>
+    </div>
+    <div class="card-box">
+      <div class="card-title">🔥 ไซเฟอร์ (สายลับเงา)</div>
+      <div class="card-text">เริ่มต้นเกมด้วยพลังเวทสะสม <strong>120 คะแนน</strong> (ปกติ 100)</div>
+    </div>
+    <div class="card-box">
+      <div class="card-title">🛡️ เล็กซ์ (อัครนายอำเภอ)</div>
+      <div class="card-text">เมื่อร่ายคาถาผิดพลาด เสียคะแนนเพียง <strong>-3 แต้ม</strong> (ปกติ -5)</div>
+    </div>
+    <div class="card-box">
+      <div class="card-title">🧪 นาโอมิ (นิติเวชเวทย์)</div>
+      <div class="card-text">เมื่อต่อวงจรสำเร็จ รับคะแนนพิเศษ <strong>+12 แต้ม</strong> (ปกติ +10)</div>
+    </div>
+  </div>
+
+  <div class="section-title">🗺️ 3. โครงสร้างด่านทั้งหมด (5 ด่านเรียนรู้)</div>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 12%;">ด่าน</th>
+        <th style="width: 28%;">สถานที่ / ภารกิจ</th>
+        <th style="width: 20%;">รูปแบบการเล่น</th>
+        <th style="width: 40%;">หัวข้อตรรกศาสตร์</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>ด่าน 1</strong></td>
+        <td>ห้องโถงวิเคราะห์หลักฐาน</td>
+        <td>คัดแยกการ์ด (Sorting)</td>
+        <td>จำแนก 10 ข้อความว่าเป็น <strong>ประพจน์จริง (T)</strong>, <strong>เท็จ (F)</strong> หรือ <strong>ไม่ใช่ประพจน์ (?)</strong></td>
+      </tr>
+      <tr>
+        <td><strong>ด่าน 2</strong></td>
+        <td>ห้องแล็บปรุงยาพิษเวทมนตร์</td>
+        <td>ต่อวงจร (Builder Palette)</td>
+        <td>ใช้ตัวเชื่อมพื้นฐาน: <span class="badge badge-amber">และ (AND)</span>, <span class="badge badge-amber">หรือ (OR)</span>, <span class="badge badge-red">ไม่ (NOT)</span></td>
+      </tr>
+      <tr>
+        <td><strong>ด่าน 3</strong></td>
+        <td>ที่เกิดเหตุตรอกรัตติกาล</td>
+        <td>ต่อวงจร (Builder Palette)</td>
+        <td>ใช้ตัวเชื่อมเหตุผล: <span class="badge badge-amber">ถ้า...แล้ว (IF_THEN)</span>, <span class="badge badge-amber">ก็ต่อเมื่อ (IFF)</span></td>
+      </tr>
+      <tr>
+        <td><strong>ด่าน 4</strong></td>
+        <td>สำนักงานใหญ่กองสืบสวน</td>
+        <td>ต่อวงจร (Builder Palette)</td>
+        <td>สมการประสม 3 เงื่อนไขขึ้นไป + การ์ดปฏิเสธ <span class="badge badge-red">ไม่</span></td>
+      </tr>
+      <tr>
+        <td><strong>ด่าน 5</strong></td>
+        <td>ห้องนิรภัยธนาคารเวทมนตร์</td>
+        <td>ต่อวงจร (Builder Palette)</td>
+        <td>สมการซับซ้อน + ใส่วงเล็บ <span class="badge badge-green">( )</span> กำหนดลำดับการคำนวณ</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">🎮 4. ระบบการเล่นและเงื่อนไขจบเกม (Game Mechanics)</div>
+  <ul>
+    <li><strong>การ์ดอาร์ตเวิร์กคมชัด:</strong> การ์ดประพจน์และการ์ดตัวเชื่อมใช้รูปภาพการ์ดตามธีมแฟนตาซีเดิม</li>
+    <li><strong>โจทย์ภารกิจคลีน:</strong> แสดงข้อความคำสั่งภารกิจและเป้าหมายชัดเจน ไม่บังพื้นที่กระดาน</li>
+    <li><strong>💥 พลังเวทมนตร์หมดสิ้น (Game Over):</strong> เมื่อคะแนนลดลงเหลือ <strong>0 🔮</strong> ระบบจะเด้งหน้าต่าง Game Over เพื่อให้กดเติมพลังเวท 100 แต้มและเริ่มสอบใหม่</li>
+    <li><strong>👨‍🏫 ทำเนียบครู (Teacher Dashboard):</strong> ปุ่ม <code>🗑️ ล้างประวัติคลาส</code> ลบประวัตินักเรียนและคะแนนผลการเล่นทั้ง Supabase และ LocalStorage เกลี้ยง 100%</li>
+  </ul>
+
+  <div class="section-title">📊 5. สรุปเกณฑ์คะแนน (Scoring System)</div>
+  <ul>
+    <li><strong>ตอบถูก / ต่อวงจรสำเร็จ:</strong> <code>+10 แต้ม</code> (ตัวละครนาโอมิ ได้ <code>+12 แต้ม</code>)</li>
+    <li><strong>ตอบผิด / คาถาล้มเหลว:</strong> <code>-5 แต้ม</code> (ตัวละครเล็กซ์ เสียแค่ <code>-3 แต้ม</code>)</li>
+    <li><strong>ขอคำใบ้ (Hint):</strong> <code>-5 แต้ม</code> (อาร์กัส ใช้ฟรี 1 ครั้งแรกของด่าน)</li>
+    <li><strong>การ์ดเผยความจริง (Reveal):</strong> <code>-15 แต้ม</code></li>
+  </ul>
+
+  <div class="footer">
+     Digital Board Game - Logic Quest v2.0 | วิชาตรรกศาสตร์เบื้องต้น ระดับชั้น ปวช.1 | สำนักสืบสวนเวทมนตร์เมืองอาร์เคน
+  </div>
+
+</body>
+</html>

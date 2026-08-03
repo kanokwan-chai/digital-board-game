@@ -1,5 +1,5 @@
-import React from 'react';
-import { Lock, Unlock, Star, LogOut, Key } from 'lucide-react';
+import React, { useState } from 'react';
+import { Lock, Unlock, Star, LogOut, Key, AlertCircle } from 'lucide-react';
 import audio from '../lib/audio';
 
 const icons = {
@@ -19,6 +19,7 @@ const doorNames = {
 };
 
 export default function GameBoard({ levels, unlockedLevel, completedLevels, student, score, onSelectLevel, onLogout }) {
+  const [lockedNotice, setLockedNotice] = useState(null);
   const keysCollected = completedLevels.length;
 
   return (
@@ -77,7 +78,7 @@ export default function GameBoard({ levels, unlockedLevel, completedLevels, stud
             audio.playClick();
             onLogout();
           }}
-          className="px-4 py-2 bg-gradient-to-r from-red-805 to-rose-800 hover:from-red-800 hover:to-rose-900 text-white font-black rounded-xl border border-red-750 shadow transition-all text-xs tracking-wider border-b-4 border-b-red-950"
+          className="px-4 py-2 bg-gradient-to-r from-red-805 to-rose-800 hover:from-red-800 hover:to-rose-900 text-white font-black rounded-xl border border-red-750 shadow transition-all text-xs tracking-wider border-b-4 border-b-red-950 cursor-pointer"
         >
           🚪 ออกจากเกม
         </button>
@@ -102,23 +103,30 @@ export default function GameBoard({ levels, unlockedLevel, completedLevels, stud
           {levels.map((level) => {
             const isCompleted = completedLevels.includes(level.id);
             const isUnlocked = level.id <= unlockedLevel;
-            const isCurrent = level.id === unlockedLevel;
+            const isCurrent = level.id === unlockedLevel && !isCompleted;
+            const canPlay = isUnlocked && !isCompleted;
             
             return (
               <div 
                 key={level.id}
                 onClick={() => {
-                  if (isUnlocked) {
+                  if (isCompleted) {
+                    audio.playError();
+                    setLockedNotice("🔒 ด่านนี้ผ่านภารกิจแล้ว! ไม่อนุญาตให้เล่นซ้ำ จนกว่าคุณครูจะกดปุ่มรีเซ็ตคลาสเรียนให้เท่านั้น");
+                  } else if (canPlay) {
                     audio.playClick();
                     onSelectLevel(level);
+                  } else {
+                    audio.playError();
+                    setLockedNotice("🔒 ด่านนี้ยังไม่เปิด! ต้องทำภารกิจด่านก่อนหน้าให้สำเร็จก่อน");
                   }
                 }}
-                className={`flex flex-col items-center p-3 rounded-2xl border-2 transition-all select-none ${
+                className={`flex flex-col items-center p-3 rounded-2xl border-2 transition-all select-none cursor-pointer ${
                   isCompleted
-                    ? 'border-emerald-500 bg-emerald-50/20 shadow-md shadow-emerald-500/5 hover:-translate-y-2 hover:shadow-lg'
+                    ? 'border-emerald-500 bg-emerald-50/40 opacity-80 hover:opacity-100'
                     : isCurrent
                       ? 'border-[#d4af37] bg-amber-50/40 shadow-xl shadow-amber-500/15 ring-4 ring-amber-500/10 hover:-translate-y-2 hover:shadow-2xl animate-pulse'
-                      : isUnlocked
+                      : canPlay
                         ? 'border-[#8a6e29]/50 bg-white/70 shadow-sm hover:-translate-y-1 hover:shadow-md'
                         : 'border-[#dccba0]/40 bg-slate-100/55 opacity-60 cursor-not-allowed'
                 }`}
@@ -130,7 +138,7 @@ export default function GameBoard({ levels, unlockedLevel, completedLevels, stud
                       ? 'bg-gradient-to-t from-emerald-100 to-teal-50 border-emerald-400'
                       : isCurrent
                         ? 'bg-gradient-to-t from-amber-100 to-yellow-50 border-[#d4af37]'
-                        : isUnlocked
+                        : canPlay
                           ? 'bg-gradient-to-t from-amber-50/20 to-white border-[#8a6e29]/65 shadow'
                           : 'bg-[#d2bfa1]/45 border-[#a3906a]'
                   }`}
@@ -138,8 +146,10 @@ export default function GameBoard({ levels, unlockedLevel, completedLevels, stud
                   {/* Status label banner */}
                   <div className="absolute top-2 right-2 z-10">
                     {isCompleted ? (
-                      <span className="text-[7px] bg-emerald-500 text-white font-black px-1 py-0.5 rounded shadow-sm">CLEAR</span>
-                    ) : isUnlocked ? (
+                      <span className="text-[7px] bg-slate-700 text-amber-200 font-black px-1.5 py-0.5 rounded shadow-sm flex items-center gap-0.5">
+                        <Lock className="w-2.5 h-2.5" /> ผ่านแล้ว
+                      </span>
+                    ) : canPlay ? (
                       <Unlock className="w-3.5 h-3.5 text-amber-600" />
                     ) : (
                       <Lock className="w-3.5 h-3.5 text-[#5c4613]" />
@@ -168,21 +178,25 @@ export default function GameBoard({ levels, unlockedLevel, completedLevels, stud
 
                   {/* Completed star indicator */}
                   {isCompleted && (
-                    <div className="absolute -bottom-2 bg-yellow-400 text-white p-0.5 rounded-full border border-white shadow-md z-10 animate-pulse">
-                      <Star className="w-3.5 h-3.5 fill-white" />
+                    <div className="absolute -bottom-2 bg-emerald-600 text-white p-0.5 rounded-full border border-white shadow-md z-10">
+                      <Star className="w-3.5 h-3.5 fill-yellow-300 text-yellow-300" />
                     </div>
                   )}
                 </div>
 
                 {/* 2. DOOR NAME PARCHMENT PLACARD */}
                 <div className="mt-4.5 w-full text-center">
-                  <div className="bg-[#8b0000] border-2 border-[#b8860b] text-amber-100 text-[9px] font-black py-0.5 px-1.5 rounded-lg shadow-md w-full truncate border-b-4 border-b-[#42310b]">
+                  <div className={`border-2 text-[9px] font-black py-0.5 px-1.5 rounded-lg shadow-md w-full truncate border-b-4 ${
+                    isCompleted 
+                      ? 'bg-emerald-800 border-emerald-600 text-emerald-100 border-b-emerald-950' 
+                      : 'bg-[#8b0000] border-[#b8860b] text-amber-100 border-b-[#42310b]'
+                  }`}>
                     {doorNames[level.id]}
                   </div>
                   
                   {/* 3. Level descriptive statement summary */}
                   <p className="text-[9px] text-[#5c4613] font-bold mt-2 leading-relaxed line-clamp-3 min-h-[38px] px-0.5">
-                    {level.description}
+                    {isCompleted ? "✅ ผ่านภารกิจแล้ว (ล็อกไม่ให้เล่นซ้ำ)" : level.description}
                   </p>
                 </div>
 
@@ -195,19 +209,46 @@ export default function GameBoard({ levels, unlockedLevel, completedLevels, stud
         <div className="w-full flex flex-wrap justify-center gap-6 mt-10 text-[9px] font-black text-[#5c4613] uppercase tracking-widest bg-[#f3e5c8] px-5 py-2.5 rounded-2xl border border-[#d2bfa1] shadow-inner">
           <div className="flex items-center gap-1.5">
             <span className="text-base">🧙‍♂️</span>
-            <span>หมากไม้สแตนดี้ศิษย์เวท (Current)</span>
+            <span>ด่านปัจจุบันที่คุณกำลังท้าทาย (Current)</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="text-xs">🔑</span>
-            <span>กุญแจทองประตูกลไกปลดล็อก</span>
+            <span className="text-xs">⭐</span>
+            <span>ด่านที่ผ่านแล้ว (ล็อกห้ามเล่นซ้ำ)</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="text-xs">🔒</span>
-            <span>ประตูผนึกเวทมนตร์ปิดตาย</span>
+            <span>ด่านยังไม่ถึงคิวปลดล็อก</span>
           </div>
         </div>
 
       </div>
+
+      {/* LOCKED REPLAY NOTICE MODAL */}
+      {lockedNotice && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-[#fdf5dd] border-8 border-[#5c4613] rounded-[36px] p-6 max-w-sm w-full text-center shadow-2xl border-b-16 border-b-[#42310b] relative animate-in fade-in zoom-in-95 duration-150">
+            <div className="w-16 h-16 mx-auto mb-3 bg-amber-100 border-2 border-amber-400 rounded-full flex items-center justify-center text-3xl shadow-inner">
+              🔒
+            </div>
+            <h3 className="text-xl font-black text-[#4c380b] mb-2 uppercase">
+              แจ้งเตือนด่านเวทมนตร์
+            </h3>
+            <p className="text-xs font-bold text-amber-900 mb-5 leading-relaxed px-2">
+              {lockedNotice}
+            </p>
+            <button
+              onClick={() => {
+                audio.playClick();
+                setLockedNotice(null);
+              }}
+              className="w-full py-3 bg-amber-700 hover:bg-amber-800 text-white font-black text-xs rounded-xl border-b-4 border-amber-900 shadow-md active:scale-95 transition-all cursor-pointer uppercase tracking-wider"
+            >
+              รับทราบ (ตกลง)
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
