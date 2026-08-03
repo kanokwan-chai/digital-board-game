@@ -26,11 +26,27 @@ export default function TeacherDashboard({ onClose }) {
   }, []);
 
   const handleResetData = async () => {
-    if (confirm("คุณแน่ใจหรือไม่ว่าต้องการล้างข้อมูลผู้เล่นทั้งหมด? (การทำเช่นนี้จะลบนักเรียนและผลการเล่นทั้งหมด)")) {
+    if (confirm("คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลผู้เล่นทั้งหมดออกจากระบบ? (ใช้เมื่อต้องการเริ่มเทอม/คลาสใหม่)")) {
       setLoading(true);
       setStudents([]);
       await db.clearAllData();
       await fetchData();
+    }
+  };
+
+  const handleUnlockAllReplay = () => {
+    if (confirm("คุณแน่ใจหรือไม่ว่าต้องการปลดล็อกด่านให้นักเรียนทุกคนเล่นซ้ำได้? (คะแนนและประวัติเดิมจะยังคงอยู่ครบถ้วน 100%)")) {
+      db.unlockAllStudentsProgress();
+      alert("✅ ปลดล็อกด่านให้นักเรียนทุกคนเล่นซ้ำเรียบร้อยแล้ว! (คะแนนสะสมเดิมยังคงอยู่ครบ)");
+      fetchData();
+    }
+  };
+
+  const handleUnlockStudentReplay = (student) => {
+    if (confirm(`คุณแน่ใจหรือไม่ว่าต้องการปลดล็อกด่านให้คุณ "${student.name}" เล่นซ้ำ? (คะแนนสะสมจะยังคงอยู่)`)) {
+      db.unlockStudentProgress(student.id);
+      alert(`✅ ปลดล็อกด่านให้คุณ "${student.name}" เรียบร้อยแล้ว!`);
+      fetchData();
     }
   };
 
@@ -63,7 +79,7 @@ export default function TeacherDashboard({ onClose }) {
           <div className="flex items-center gap-3">
             <button
               onClick={onClose}
-              className="p-3 bg-white hover:bg-slate-100 rounded-2xl border-2 border-[#8a6e29]/40 shadow-sm text-slate-500 hover:text-slate-800 transition-all"
+              className="p-3 bg-white hover:bg-slate-100 rounded-2xl border-2 border-[#8a6e29]/40 shadow-sm text-slate-500 hover:text-slate-800 transition-all cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4 text-[#8a6e29]" />
             </button>
@@ -77,19 +93,28 @@ export default function TeacherDashboard({ onClose }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 w-full md:w-auto">
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
             <button
               onClick={fetchData}
-              className="p-2.5 bg-white hover:bg-slate-50 rounded-xl border-2 border-[#8a6e29]/40 shadow text-[#5c4613] font-black text-[10px] tracking-wide transition-all flex items-center gap-1.5"
+              className="p-2.5 bg-white hover:bg-slate-50 rounded-xl border-2 border-[#8a6e29]/40 shadow text-[#5c4613] font-black text-[10px] tracking-wide transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <RefreshCw className="w-3.5 h-3.5" /> รีเฟรชวิชา
             </button>
+
+            <button
+              onClick={handleUnlockAllReplay}
+              className="p-2.5 bg-amber-100 hover:bg-amber-200 rounded-xl border-2 border-amber-400 shadow text-amber-950 font-black text-[10px] tracking-wide transition-all flex items-center gap-1.5 border-b-4 border-b-amber-700 cursor-pointer"
+              title="ปลดล็อกด่านให้นักเรียนทุกคนเล่นใหม่ โดยเก็บสะสมคะแนนเดิมไว้"
+            >
+              🔓 ปลดล็อกด่านทุกคน (คงคะแนนเดิม)
+            </button>
+
             <button
               onClick={handleResetData}
-              className="p-2.5 bg-rose-50 hover:bg-rose-100 rounded-xl border-2 border-rose-350 shadow text-rose-700 font-black text-[10px] tracking-wide transition-all flex items-center gap-1.5 ml-auto md:ml-0 border-b-4 border-b-rose-900"
-              title="ล้างข้อมูลทั้งหมด"
+              className="p-2.5 bg-rose-50 hover:bg-rose-100 rounded-xl border-2 border-rose-350 shadow text-rose-700 font-black text-[10px] tracking-wide transition-all flex items-center gap-1.5 ml-auto md:ml-0 border-b-4 border-b-rose-900 cursor-pointer"
+              title="ลบข้อมูลนักเรียนและคะแนนทั้งหมดออกจากระบบ"
             >
-              <Trash2 className="w-3.5 h-3.5" /> ล้างประวัติคลาส
+              <Trash2 className="w-3.5 h-3.5" /> ลบประวัติคลาสทั้งหมด
             </button>
           </div>
         </div>
@@ -121,9 +146,21 @@ export default function TeacherDashboard({ onClose }) {
             </div>
           </div>
 
-          {/* Card 3: Hints Used */}
+          {/* Card 3: Wrong Attempts */}
           <div className="bg-[#f3e5c8] border border-[#d2bfa1] rounded-2xl p-4 shadow-sm flex items-center gap-3">
-            <div className="p-3 bg-amber-500/10 border border-amber-500/20 text-teal-600 rounded-xl">
+            <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-600 rounded-xl">
+              <AlertTriangle className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="block text-[8px] font-black text-amber-805/65 uppercase tracking-wider">ร่ายคาถาผิดพลาด</span>
+              <span className="text-2xl font-black text-rose-600 leading-tight">{totalWrong} ครั้ง</span>
+              <span className="text-[8px] text-slate-500 block leading-tight">การตรวจสอบล้มเหลว</span>
+            </div>
+          </div>
+
+          {/* Card 4: Hints Used */}
+          <div className="bg-[#f3e5c8] border border-[#d2bfa1] rounded-2xl p-4 shadow-sm flex items-center gap-3">
+            <div className="p-3 bg-teal-500/10 border border-teal-500/20 text-teal-600 rounded-xl">
               <BarChart2 className="w-5 h-5" />
             </div>
             <div>
@@ -133,50 +170,37 @@ export default function TeacherDashboard({ onClose }) {
             </div>
           </div>
 
-          {/* Card 4: Wrong Attempts */}
-          <div className="bg-[#f3e5c8] border border-[#d2bfa1] rounded-2xl p-4 shadow-sm flex items-center gap-3">
-            <div className="p-3 bg-amber-500/10 border border-amber-500/20 text-rose-500 rounded-xl">
-              <AlertTriangle className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="block text-[8px] font-black text-amber-850/65 uppercase tracking-wider">ร่ายคาถาผิดพลาด</span>
-              <span className="text-2xl font-black text-rose-700 leading-tight">{totalWrong} ครั้ง</span>
-              <span className="text-[8px] text-slate-500 block leading-tight">การตรวจสอบล้มเหลว</span>
-            </div>
-          </div>
-
         </div>
 
-        {/* Search and Filters */}
-        <div className="bg-[#f3e5c8] border border-[#d2bfa1] rounded-2xl p-4 shadow-inner mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Filter Controls */}
+        <div className="bg-[#f3e5c8] border border-[#d2bfa1] rounded-2xl p-4 mb-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
           
-          {/* Search */}
-          <div className="relative w-full sm:max-w-md">
-            <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
+          <div className="relative w-full md:w-96">
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
               placeholder="ค้นหาตามชื่อผู้เรียน..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-[#fffdf0] border-2 border-[#8a6e29]/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-xs font-black text-slate-800 placeholder:text-slate-400 shadow-inner"
+              className="w-full pl-10 pr-4 py-2 bg-white border border-amber-250 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500/50 shadow-inner"
             />
           </div>
 
-          {/* Classroom Filter */}
-          <div className="flex items-center gap-2 self-stretch sm:self-auto w-full sm:w-auto justify-end">
-            <span className="text-[9px] font-black text-amber-850/80 uppercase tracking-wider">ตัวกรองคลาสเรียน:</span>
+          <div className="flex items-center gap-2 w-full md:w-auto justify-end">
+            <label className="text-[10px] font-black text-[#8a6e29] uppercase tracking-wider">ตัวกรองคลาสเรียน:</label>
             <select
               value={selectedClass}
               onChange={(e) => setSelectedClass(e.target.value)}
-              className="px-3 py-1.5 bg-[#fffdf0] border-2 border-[#8a6e29]/50 focus:outline-none rounded-xl text-xs font-black text-slate-805 shadow-inner"
+              className="px-3 py-2 bg-white border border-amber-250 rounded-xl text-xs font-black text-[#5c4613] focus:outline-none focus:ring-2 focus:ring-amber-500/50 shadow-sm cursor-pointer"
             >
-              {classrooms.map(cls => (
+              {classrooms.map((cls) => (
                 <option key={cls} value={cls}>
                   {cls === 'All' ? 'ทุกห้องเรียน' : cls}
                 </option>
               ))}
             </select>
           </div>
+
         </div>
 
         {/* Student Progress Table */}
@@ -199,22 +223,23 @@ export default function TeacherDashboard({ onClose }) {
               <table className="min-w-full divide-y divide-[#ebdcb8]">
                 <thead className="bg-[#fbf9f4] text-[#8a6e29] font-black text-[9px] uppercase tracking-wider text-left border-b-2 border-[#ebdcb8]">
                   <tr>
-                    <th className="px-5 py-3">ห้องเรียน</th>
-                    <th className="px-5 py-3">เลขที่</th>
-                    <th className="px-5 py-3">ชื่อ - ฉายาเวทมนตร์</th>
-                    <th className="px-5 py-3 text-center">ผ่านด่านล่าสุด</th>
-                    <th className="px-5 py-3 text-center">พลังเวทสะสม</th>
-                    <th className="px-5 py-3 text-center">ตอบผิด (ครั้ง)</th>
-                    <th className="px-5 py-3 text-center">ใช้คำใบ้ (ครั้ง)</th>
+                    <th className="px-4 py-3">ห้องเรียน</th>
+                    <th className="px-4 py-3">เลขที่</th>
+                    <th className="px-4 py-3">ชื่อ - ฉายาเวทมนตร์</th>
+                    <th className="px-4 py-3 text-center">ผ่านด่านล่าสุด</th>
+                    <th className="px-4 py-3 text-center">พลังเวทสะสม</th>
+                    <th className="px-4 py-3 text-center">ตอบผิด (ครั้ง)</th>
+                    <th className="px-4 py-3 text-center">ใช้คำใบ้ (ครั้ง)</th>
+                    <th className="px-4 py-3 text-center">ปลดล็อกการเล่น</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-xs font-bold text-slate-700 bg-white/80">
                   {filteredStudents.map((student) => (
                     <tr key={student.id} className="hover:bg-[#ebdcb8]/20 transition-colors">
-                      <td className="px-5 py-3.5 font-black text-slate-800">{student.classroom}</td>
-                      <td className="px-5 py-3.5 text-slate-500">{student.number}</td>
-                      <td className="px-5 py-3.5 font-black text-slate-850">{student.name}</td>
-                      <td className="px-5 py-3.5 text-center">
+                      <td className="px-4 py-3 font-black text-slate-800">{student.classroom}</td>
+                      <td className="px-4 py-3 text-slate-500">{student.number}</td>
+                      <td className="px-4 py-3 font-black text-slate-850">{student.name}</td>
+                      <td className="px-4 py-3 text-center">
                         <span className={`inline-flex items-center px-3 py-0.5 rounded-full text-[9px] font-black border ${
                           student.level_completed >= 5 
                             ? 'bg-emerald-100 border-emerald-300 text-emerald-800' 
@@ -228,6 +253,16 @@ export default function TeacherDashboard({ onClose }) {
                       <td className="px-5 py-3.5 text-center font-black text-amber-700">{student.score} 🔮</td>
                       <td className="px-5 py-3.5 text-center text-rose-600 font-extrabold">{student.wrong_attempts || 0}</td>
                       <td className="px-5 py-3.5 text-center text-teal-600 font-extrabold">{student.hints_used || 0}</td>
+                      <td className="px-4 py-3 text-center">
+                        <button
+                          type="button"
+                          onClick={() => handleUnlockStudentReplay(student)}
+                          className="px-2.5 py-1 bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 rounded-lg text-[10px] font-black transition-all shadow-xs flex items-center justify-center gap-1 mx-auto cursor-pointer"
+                          title="ปลดล็อกด่านให้นักเรียนคนนี้เล่นซ้ำ โดยไม่ลบประวัติคะแนน"
+                        >
+                          🔓 ปลดล็อกเล่นซ้ำ
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

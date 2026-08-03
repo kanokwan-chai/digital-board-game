@@ -182,5 +182,41 @@ export const db = {
     }
     localStorage.removeItem('lq_students');
     localStorage.removeItem('lq_game_results');
+  },
+
+  // 5. Unlock replay for a specific student without deleting score history
+  unlockStudentProgress(studentId) {
+    localStorage.setItem(`lq_unlock_replay_${studentId}`, 'true');
+    const keys = Object.keys(localStorage);
+    keys.forEach(key => {
+      if (key.startsWith(`lq_progress_${studentId}`)) {
+        try {
+          const data = JSON.parse(localStorage.getItem(key) || '{}');
+          localStorage.setItem(key, JSON.stringify({
+            ...data,
+            unlockedLevel: 1,
+            completedLevels: []
+          }));
+        } catch (e) { console.error(e); }
+      }
+    });
+  },
+
+  // 6. Unlock replay for all students without deleting score history
+  unlockAllStudentsProgress() {
+    localStorage.setItem('lq_unlock_all_replay', 'true');
+    const keys = Object.keys(localStorage);
+    keys.forEach(key => {
+      if (key.startsWith('lq_progress_')) {
+        try {
+          const data = JSON.parse(localStorage.getItem(key) || '{}');
+          localStorage.setItem(key, JSON.stringify({
+            ...data,
+            unlockedLevel: 1,
+            completedLevels: []
+          }));
+        } catch (e) { console.error(e); }
+      }
+    });
   }
 };
