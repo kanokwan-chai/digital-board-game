@@ -303,13 +303,16 @@ export default function Login({ onLogin, onOpenDashboard }) {
           </form>
 
           {/* Footer */}
-          <div className="mt-4 pt-3 flex items-center justify-between border-t border-amber-200">
+          <div className="mt-4 pt-3 flex flex-col sm:flex-row items-center justify-between border-t border-amber-200 gap-2">
             <span className="text-[10px] font-black text-amber-800/60">
               ตรรกศาสตร์เบื้องต้น · ปวช.1
             </span>
-            <button onClick={onOpenDashboard}
-              className="text-[10px] font-black flex items-center gap-1 text-amber-800 hover:text-amber-950 underline transition-all">
-              🔑 Teacher Dashboard
+            <button 
+              type="button"
+              onClick={onOpenDashboard}
+              className="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 rounded-xl font-black text-xs transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
+            >
+              🎓 สำหรับคุณครูผู้สอน (Dashboard)
             </button>
           </div>
 
