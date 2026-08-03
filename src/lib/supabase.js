@@ -34,7 +34,13 @@ export const db = {
           .maybeSingle();
 
         if (existing) {
-          return existing;
+          const { data: updated } = await supabase
+            .from('students')
+            .update({ name })
+            .eq('id', existing.id)
+            .select()
+            .single();
+          return updated || { ...existing, name };
         }
 
         const { data, error } = await supabase
@@ -54,7 +60,10 @@ export const db = {
     const localStudents = JSON.parse(localStorage.getItem('lq_students') || '[]');
     let student = localStudents.find(s => s.classroom === classroom && Number(s.number) === Number(number));
     
-    if (!student) {
+    if (student) {
+      student.name = name;
+      localStorage.setItem('lq_students', JSON.stringify(localStudents));
+    } else {
       student = {
         id: generateUUID(),
         name,

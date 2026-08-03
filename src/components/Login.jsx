@@ -77,7 +77,7 @@ export default function Login({ onLogin, onOpenDashboard }) {
     setLoading(true); setError('');
     try {
       const student = await db.registerStudent(name.trim(), classroom, studentNumber);
-      onLogin({ ...student, character: selectedChar });
+      onLogin({ ...student, name: name.trim(), character: selectedChar });
     } catch (err) {
       console.error(err);
       setError('เกิดข้อผิดพลาด กรุณาลองใหม่');
