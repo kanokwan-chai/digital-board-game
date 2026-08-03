@@ -51,12 +51,20 @@ const prologueSlides = [
   },
 ];
 
-function PrologueSlideshow({ onDone, audioLib }) {
+export function PrologueSlideshow({ onDone, audioLib }) {
   const [slideIdx, setSlideIdx] = useState(0);
   const slide = prologueSlides[slideIdx];
   const isLast = slideIdx === prologueSlides.length - 1;
   return (
-    <div className="w-full max-w-xl mx-auto bg-[#fffdf5] border-4 border-[#8c6d23] rounded-2xl shadow-xl flex flex-col text-[#4c380b] overflow-hidden animate-fade-in my-auto">
+    <div className="w-full max-w-xl mx-auto bg-[#fffdf5] border-4 border-[#8c6d23] rounded-2xl shadow-xl flex flex-col text-[#4c380b] overflow-hidden animate-fade-in my-auto relative">
+      {/* Top Close Button */}
+      <button 
+        onClick={() => { audioLib?.playClick?.(); onDone(); }}
+        className="absolute top-3 right-3 z-30 bg-rose-600 hover:bg-rose-700 text-white font-black px-3 py-1 rounded-full text-xs shadow-md border border-white flex items-center gap-1 cursor-pointer"
+      >
+        ✕ ปิดหน้าต่าง
+      </button>
+
       {/* Image container using exact 3:2 aspect ratio so full image is visible without cropping */}
       <div className="relative w-full aspect-[3/2] bg-[#1a1208] flex items-center justify-center overflow-hidden">
         <img src={slide.image} alt={slide.title} className="w-full h-full object-contain" />
@@ -70,7 +78,6 @@ function PrologueSlideshow({ onDone, audioLib }) {
         </div>
       </div>
 
-
       {/* Content */}
       <div className="p-3.5 sm:p-4 flex flex-col gap-2 bg-[#fffdf5]">
         <h2 className="text-sm sm:text-base font-black text-amber-900 border-b border-amber-200 pb-1">
@@ -83,15 +90,15 @@ function PrologueSlideshow({ onDone, audioLib }) {
         {/* Buttons */}
         <div className="flex gap-2.5 mt-1">
           {slideIdx > 0 && (
-            <button onClick={() => { audioLib.playClick(); setSlideIdx(i => i - 1); }}
-              className="px-4 py-2 bg-white border border-[#d4af37] text-amber-900 font-black rounded-xl text-xs hover:bg-amber-50 transition-all shadow-sm">
+            <button onClick={() => { audioLib?.playClick?.(); setSlideIdx(i => i - 1); }}
+              className="px-4 py-2 bg-white border border-[#d4af37] text-amber-900 font-black rounded-xl text-xs hover:bg-amber-50 transition-all shadow-sm cursor-pointer">
               ← ย้อนกลับ
             </button>
           )}
           <button
-            onClick={() => { audioLib.playClick(); if (isLast) onDone(); else setSlideIdx(i => i + 1); }}
-            className="flex-1 py-2 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white font-black rounded-xl shadow transition-all text-xs border-b-2 border-b-amber-800 flex items-center justify-center gap-1.5">
-            {isLast ? 'เริ่มสืบสวนคัดแยกการ์ด 🔍' : `ถัดไป (${slideIdx + 2}/${prologueSlides.length}) →`}
+            onClick={() => { audioLib?.playClick?.(); if (isLast) onDone(); else setSlideIdx(i => i + 1); }}
+            className="flex-1 py-2 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white font-black rounded-xl shadow transition-all text-xs border-b-2 border-b-amber-800 flex items-center justify-center gap-1.5 cursor-pointer">
+            {isLast ? 'จบเนื้อเรื่อง (ปิด) ✕' : `ถัดไป (${slideIdx + 2}/${prologueSlides.length}) →`}
           </button>
         </div>
       </div>
@@ -169,7 +176,8 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
   const [sortingItems, setSortingItems] = useState([]);
   const [sortingActiveIdx, setSortingActiveIdx] = useState(0);
   const [sortingResults, setSortingResults] = useState([]);
-  const [showLevel1Prologue, setShowLevel1Prologue] = useState(true);
+  const [showLevel1Prologue, setShowLevel1Prologue] = useState(false);
+  const [showStoryModal, setShowStoryModal] = useState(false);
 
   const [levelDeck, setLevelDeck] = useState([]); 
   const [drawnCards, setDrawnCards] = useState([]); 
@@ -647,6 +655,17 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
         </div>
 
         <div className="flex items-center gap-2 md:gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              audio.playClick();
+              setShowStoryModal(true);
+            }}
+            className="px-2 md:px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 rounded-xl font-black text-[9px] md:text-[10px] transition-all shadow-xs flex items-center gap-1 cursor-pointer"
+            title="เปิดอ่านเนื้อเรื่องบันทึกคดี"
+          >
+            📖 เนื้อเรื่องคดี
+          </button>
           <div className="bg-[#fffcf5] border border-amber-300 px-2 md:px-3.5 py-1 rounded-xl font-black text-amber-705 text-[10px] md:text-xs shadow-sm">
             {score} 🔮
           </div>
@@ -655,12 +674,19 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
               audio.playClick();
               onBackToMap();
             }}
-            className="px-2.5 py-1 bg-gradient-to-r from-red-800 to-rose-900 hover:from-red-900 hover:to-rose-950 text-white font-black rounded-lg border border-red-650 shadow transition-all text-[9px] md:text-[10px] border-b-4 border-b-red-950"
+            className="px-2.5 py-1 bg-gradient-to-r from-red-800 to-rose-900 hover:from-red-900 hover:to-rose-950 text-white font-black rounded-lg border border-red-650 shadow transition-all text-[9px] md:text-[10px] border-b-4 border-b-red-950 cursor-pointer"
           >
             ออก
           </button>
         </div>
       </div>
+
+      {/* OPTIONAL STORYBOOK MODAL */}
+      {showStoryModal && (
+        <div className="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <PrologueSlideshow onDone={() => setShowStoryModal(false)} audioLib={audio} />
+        </div>
+      )}
 
       {/* Main Table Layout */}
       <div className="w-full max-w-5xl flex-1 flex flex-col gap-4 md:gap-6 z-10">

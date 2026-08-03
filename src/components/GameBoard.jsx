@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Lock, Unlock, Star, LogOut, Key, AlertCircle } from 'lucide-react';
 import audio from '../lib/audio';
+import { PrologueSlideshow } from './GameArea';
 
 const icons = {
   1: "🌲", // Forest
@@ -20,6 +21,7 @@ const doorNames = {
 
 export default function GameBoard({ levels, unlockedLevel, completedLevels, student, score, onSelectLevel, onLogout }) {
   const [lockedNotice, setLockedNotice] = useState(null);
+  const [showStoryModal, setShowStoryModal] = useState(false);
   const keysCollected = completedLevels.length;
 
   return (
@@ -71,6 +73,19 @@ export default function GameBoard({ levels, unlockedLevel, completedLevels, stud
             <span className="text-xs font-black text-amber-700 leading-none">{score} คะแนน</span>
           </div>
         </div>
+
+        {/* Story button */}
+        <button 
+          type="button"
+          onClick={() => {
+            audio.playClick();
+            setShowStoryModal(true);
+          }}
+          className="px-3.5 py-2 bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 font-black rounded-2xl shadow-xs transition-all text-xs flex items-center gap-1.5 cursor-pointer"
+          title="เปิดอ่านเนื้อเรื่องบันทึกคดี"
+        >
+          📖 อ่านเนื้อเรื่องคดี
+        </button>
 
         {/* Right: Exit */}
         <button 
@@ -246,6 +261,13 @@ export default function GameBoard({ levels, unlockedLevel, completedLevels, stud
               รับทราบ (ตกลง)
             </button>
           </div>
+        </div>
+      )}
+
+      {/* OPTIONAL STORYBOOK MODAL */}
+      {showStoryModal && (
+        <div className="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <PrologueSlideshow onDone={() => setShowStoryModal(false)} audioLib={audio} />
         </div>
       )}
 
