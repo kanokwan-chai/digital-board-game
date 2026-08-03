@@ -50,6 +50,40 @@ export default function TeacherDashboard({ onClose }) {
     }
   };
 
+  const handleExportExcel = () => {
+    if (filteredStudents.length === 0) {
+      alert("⚠️ ไม่มีข้อมูลนักเรียนให้ส่งออกไฟล์ Excel");
+      return;
+    }
+
+    // CSV Header with UTF-8 BOM for Microsoft Excel Thai font compatibility
+    const headers = ["ลำดับที่", "ห้องเรียน", "เลขที่", "ชื่อ - นามสกุล", "ผ่านด่านล่าสุด", "สถานะภารกิจ", "คะแนนพลังเวทสะสม", "ตอบผิด (ครั้ง)", "ใช้คำใบ้ (ครั้ง)", "วันที่บันทึกผล"];
+
+    const rows = filteredStudents.map((student, index) => [
+      index + 1,
+      `"${student.classroom || 'ปวช.1/1'}"`,
+      student.number || 0,
+      `"${student.name || ''}"`,
+      `"Level ${student.level_completed || 0}"`,
+      student.level_completed >= 5 ? `"สำเร็จครบทุกด่าน"` : `"กำลังดำเนินการ"`,
+      student.score || 100,
+      student.wrong_attempts || 0,
+      student.hints_used || 0,
+      `"${student.created_at ? new Date(student.created_at).toLocaleString('th-TH') : '-'}"`
+    ]);
+
+    const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const today = new Date().toISOString().split('T')[0];
+    link.setAttribute("href", url);
+    link.setAttribute("download", `รายงานผลการเรียน_Logic_Quest_${selectedClass === 'All' ? 'ทุกห้อง' : selectedClass}_${today}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const filteredStudents = students.filter(student => {
     const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesClass = selectedClass === 'All' || student.classroom === selectedClass;
@@ -99,6 +133,14 @@ export default function TeacherDashboard({ onClose }) {
               className="p-2.5 bg-white hover:bg-slate-50 rounded-xl border-2 border-[#8a6e29]/40 shadow text-[#5c4613] font-black text-[10px] tracking-wide transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <RefreshCw className="w-3.5 h-3.5" /> รีเฟรชวิชา
+            </button>
+
+            <button
+              onClick={handleExportExcel}
+              className="p-2.5 bg-emerald-700 hover:bg-emerald-800 rounded-xl border-2 border-emerald-500 shadow text-white font-black text-[10px] tracking-wide transition-all flex items-center gap-1.5 border-b-4 border-b-emerald-950 cursor-pointer"
+              title="ส่งออกรายงานผลการเรียนเป็นไฟล์ Excel (.csv)"
+            >
+              📊 Export Excel (รายงานคะแนน)
             </button>
 
             <button
