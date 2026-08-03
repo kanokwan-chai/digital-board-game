@@ -18,6 +18,24 @@ export default function App() {
   const [view, setView] = useState('login');
   const [showGameCompleteModal, setShowGameCompleteModal] = useState(false);
 
+  // Teacher Passcode Modal state
+  const [showTeacherAuthModal, setShowTeacherAuthModal] = useState(false);
+  const [teacherPasscode, setTeacherPasscode] = useState('');
+  const [passcodeError, setPasscodeError] = useState('');
+  const [showPasswordText, setShowPasswordText] = useState(false);
+
+  const handleTeacherAuth = (e) => {
+    e.preventDefault();
+    if (teacherPasscode === '122047mail') {
+      setShowTeacherAuthModal(false);
+      setTeacherPasscode('');
+      setPasscodeError('');
+      setView('dashboard');
+    } else {
+      setPasscodeError('❌ รหัสผ่านไม่ถูกต้อง! กรุณาลองใหม่อีกครั้ง');
+    }
+  };
+
   // Sync progress from localStorage for this specific student
   useEffect(() => {
     if (student) {
@@ -150,7 +168,7 @@ export default function App() {
       {view === 'login' && (
         <Login 
           onLogin={handleLogin} 
-          onOpenDashboard={() => setView('dashboard')} 
+          onOpenDashboard={() => setShowTeacherAuthModal(true)} 
         />
       )}
 
@@ -182,6 +200,73 @@ export default function App() {
         <TeacherDashboard 
           onClose={() => setView('login')} 
         />
+      )}
+
+      {/* TEACHER AUTH PASSCODE MODAL */}
+      {showTeacherAuthModal && (
+        <div className="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-[#fdf5dd] border-8 border-[#5c4613] rounded-[36px] p-6 max-w-sm w-full text-center shadow-2xl relative border-b-16 border-b-[#42310b] text-[#4c380b] animate-in fade-in zoom-in-95 duration-150">
+            <div className="w-16 h-16 bg-amber-100 border-2 border-amber-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 shadow-inner">
+              🔐
+            </div>
+            
+            <h2 className="text-xl font-black text-[#4c380b] mb-1 uppercase font-sans">
+              สิทธิ์สำหรับคุณครูผู้สอน
+            </h2>
+            <p className="text-xs font-bold text-amber-900 mb-4 leading-relaxed">
+              โปรดกรอกรหัสผ่านลับเพื่อเข้าสู่ระบบทำเนียบคุณครู (Teacher Dashboard)
+            </p>
+
+            <form onSubmit={handleTeacherAuth} className="space-y-3">
+              <div className="relative">
+                <input
+                  type={showPasswordText ? "text" : "password"}
+                  value={teacherPasscode}
+                  onChange={(e) => {
+                    setTeacherPasscode(e.target.value);
+                    setPasscodeError('');
+                  }}
+                  placeholder="กรอกรหัสผ่านคุณครู..."
+                  autoFocus
+                  className="w-full px-4 py-3 bg-white border-2 border-[#8a6e29]/50 rounded-xl text-center text-sm font-black text-slate-850 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-inner"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPasswordText(!showPasswordText)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-amber-850 font-black hover:text-amber-950 cursor-pointer"
+                >
+                  {showPasswordText ? '🙈 ซ่อน' : '👁️ แสดง'}
+                </button>
+              </div>
+
+              {passcodeError && (
+                <div className="text-xs font-extrabold text-rose-600 bg-rose-50 border border-rose-200 p-2 rounded-lg animate-bounce">
+                  {passcodeError}
+                </div>
+              )}
+
+              <div className="flex gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowTeacherAuthModal(false);
+                    setTeacherPasscode('');
+                    setPasscodeError('');
+                  }}
+                  className="flex-1 py-2.5 bg-white hover:bg-slate-100 text-slate-600 font-black rounded-xl text-xs border border-slate-300 shadow-sm cursor-pointer"
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-2.5 bg-amber-700 hover:bg-amber-800 text-white font-black rounded-xl text-xs border-b-4 border-amber-900 shadow-md active:scale-95 transition-all cursor-pointer uppercase tracking-wider"
+                >
+                  🔑 เข้าสู่ระบบ
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
 
       {/* Final Game Completion Modal - Styled like a detailed Wizard Gold Plaque Scroll */}
