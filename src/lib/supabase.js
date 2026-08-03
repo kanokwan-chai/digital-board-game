@@ -34,13 +34,17 @@ export const db = {
           .maybeSingle();
 
         if (existing) {
+          const isNameChanged = existing.name !== name;
+          if (isNameChanged) {
+            localStorage.setItem(`lq_unlock_replay_${existing.id}`, 'true');
+          }
           const { data: updated } = await supabase
             .from('students')
             .update({ name })
             .eq('id', existing.id)
             .select()
             .single();
-          return updated || { ...existing, name };
+          return { ...(updated || { ...existing, name }), isNameChanged };
         }
 
         const { data, error } = await supabase
@@ -61,8 +65,13 @@ export const db = {
     let student = localStudents.find(s => s.classroom === classroom && Number(s.number) === Number(number));
     
     if (student) {
+      const isNameChanged = student.name !== name;
+      if (isNameChanged) {
+        localStorage.setItem(`lq_unlock_replay_${student.id}`, 'true');
+      }
       student.name = name;
       localStorage.setItem('lq_students', JSON.stringify(localStudents));
+      return { ...student, isNameChanged };
     } else {
       student = {
         id: generateUUID(),

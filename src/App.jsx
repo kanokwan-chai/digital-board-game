@@ -40,26 +40,22 @@ export default function App() {
   useEffect(() => {
     if (student) {
       const storedProgress = localStorage.getItem(`lq_progress_${student.id}`);
-      const isReplayUnlocked = localStorage.getItem('lq_unlock_all_replay') === 'true' ||
+      const isReplayUnlocked = student.isNameChanged ||
+                               localStorage.getItem('lq_unlock_all_replay') === 'true' ||
                                localStorage.getItem(`lq_unlock_replay_${student.id}`) === 'true';
 
-      if (storedProgress) {
+      if (storedProgress && !isReplayUnlocked) {
         const { score: s, unlockedLevel: ul, completedLevels: cl } = JSON.parse(storedProgress);
         setScore(s);
-        if (isReplayUnlocked) {
-          setUnlockedLevel(1);
-          setCompletedLevels([]);
-          localStorage.removeItem(`lq_unlock_replay_${student.id}`);
-        } else {
-          setUnlockedLevel(ul);
-          setCompletedLevels(cl);
-        }
+        setUnlockedLevel(ul);
+        setCompletedLevels(cl);
       } else {
         // Apply character ability: Phoenix 🔥 starts with 120 points, others start with 100
         const startingScore = student.character?.id === 'phoenix' ? 120 : 100;
         setScore(startingScore);
         setUnlockedLevel(1);
         setCompletedLevels([]);
+        localStorage.removeItem(`lq_unlock_replay_${student.id}`);
       }
     }
   }, [student]);
