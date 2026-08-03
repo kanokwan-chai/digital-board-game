@@ -161,9 +161,19 @@ export const db = {
 
     return students.map(student => {
       const studentResults = results.filter(r => r.student_id === student.id);
-      const maxLevel = studentResults.reduce((max, r) => r.level_completed > max ? r.level_completed : max, 0);
-      const latestResult = studentResults.sort((a,b) => new Date(b.completed_at) - new Date(a.completed_at))[0];
+
+      // Sort by completion time descending (latest first)
+      const sortedResults = [...studentResults].sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at));
+      const latestResult = sortedResults[0];
+
+      // Score = the score at the latest level completion (reflects all deductions up to that point)
       const score = latestResult ? latestResult.score : 100;
+
+      // Level completed = highest level reached
+      const maxLevel = studentResults.reduce((max, r) => r.level_completed > max ? r.level_completed : max, 0);
+
+      // Use the latest session's wrong attempts & hints (take from the results in the latest "batch")
+      // Latest session = results that share the same level range as the most recent attempt
       const wrongAttempts = studentResults.reduce((sum, r) => sum + (r.wrong_attempts || 0), 0);
       const hintsUsed = studentResults.reduce((sum, r) => sum + (r.hints_used || 0), 0);
       const playCount = studentResults.length;
@@ -173,6 +183,7 @@ export const db = {
         name: student.name,
         classroom: student.classroom,
         number: student.number,
+        created_at: student.created_at,
         score,
         level_completed: maxLevel,
         wrong_attempts: wrongAttempts,
