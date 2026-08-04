@@ -103,27 +103,39 @@ export default function App() {
     }
   };
 
-  // Sync progress from localStorage for this specific student
+  // Sync progress from localStorage / Supabase Cloud for this specific student
   useEffect(() => {
     if (student) {
-      const storedProgress = localStorage.getItem(`lq_progress_${student.id}`);
       const isReplayUnlocked = student.isNameChanged ||
                                localStorage.getItem('lq_unlock_all_replay') === 'true' ||
                                localStorage.getItem(`lq_unlock_replay_${student.id}`) === 'true';
 
-      if (storedProgress && !isReplayUnlocked) {
-        const { score: s, unlockedLevel: ul, completedLevels: cl } = JSON.parse(storedProgress);
-        setScore(s);
-        setUnlockedLevel(ul);
-        setCompletedLevels(cl);
-      } else {
-        // Apply character ability: Phoenix 🔥 starts with 120 points, others start with 100
-        const startingScore = student.character?.id === 'phoenix' ? 120 : 100;
-        setScore(startingScore);
-        setUnlockedLevel(1);
-        setCompletedLevels([]);
-        localStorage.removeItem(`lq_unlock_replay_${student.id}`);
-      }
+      const loadProgress = async () => {
+        const storedProgress = localStorage.getItem(`lq_progress_${student.id}`);
+        if (storedProgress && !isReplayUnlocked) {
+          const { score: s, unlockedLevel: ul, completedLevels: cl } = JSON.parse(storedProgress);
+          setScore(s);
+          setUnlockedLevel(ul);
+          setCompletedLevels(cl);
+        } else {
+          // Check remote progress from Supabase (e.g. if logging in from a new device)
+          const remoteProgress = await db.getStudentProgress(student.id);
+          if (remoteProgress && !isReplayUnlocked) {
+            setScore(remoteProgress.score);
+            setUnlockedLevel(remoteProgress.unlockedLevel);
+            setCompletedLevels(remoteProgress.completedLevels);
+          } else {
+            // Apply character ability: Phoenix 🔥 starts with 120 points, others start with 100
+            const startingScore = student.character?.id === 'phoenix' ? 120 : 100;
+            setScore(startingScore);
+            setUnlockedLevel(1);
+            setCompletedLevels([]);
+            localStorage.removeItem(`lq_unlock_replay_${student.id}`);
+          }
+        }
+      };
+
+      loadProgress();
     }
   }, [student]);
 

@@ -41,6 +41,32 @@ export const db = {
     return data;
   },
 
+  // 0.5 Get remote student progress from Supabase
+  async getStudentProgress(studentId) {
+    if (isSupabaseConfigured) {
+      try {
+        const { data: results } = await supabase
+          .from('game_results')
+          .select('*')
+          .eq('student_id', studentId);
+        
+        if (results && results.length > 0) {
+          const maxLevel = results.reduce((max, r) => r.level_completed > max ? r.level_completed : max, 0);
+          const completed = [...new Set(results.map(r => r.level_completed))];
+          const latest = [...results].sort((a,b) => new Date(b.completed_at) - new Date(a.completed_at))[0];
+          return {
+            unlockedLevel: Math.min(5, maxLevel + 1),
+            completedLevels: completed,
+            score: latest ? latest.score : 100
+          };
+        }
+      } catch (err) {
+        console.error("Error fetching student progress:", err);
+      }
+    }
+    return null;
+  },
+
   // 1. Register student
   async registerStudent(name, classroom, number) {
     if (isSupabaseConfigured) {
