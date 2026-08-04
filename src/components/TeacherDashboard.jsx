@@ -57,12 +57,11 @@ export default function TeacherDashboard({ onClose }) {
     }
 
     // CSV Header with UTF-8 BOM for Microsoft Excel Thai font compatibility
-    const headers = ["ลำดับที่", "ห้องเรียน", "เลขที่", "ชื่อ - นามสกุล", "ผ่านด่านล่าสุด", "สถานะภารกิจ", "คะแนนพลังเวทสะสม", "ตอบผิด (ครั้ง)", "ใช้คำใบ้ (ครั้ง)", "วันที่บันทึกผล"];
+    const headers = ["ลำดับที่", "อีเมลนักเรียน (Google Account)", "ชื่อ - นามสกุล", "ผ่านด่านล่าสุด", "สถานะภารกิจ", "คะแนนพลังเวทสะสม", "ตอบผิด (ครั้ง)", "ใช้คำใบ้ (ครั้ง)", "วันที่บันทึกผล"];
 
     const rows = filteredStudents.map((student, index) => [
       index + 1,
-      `"${student.classroom || 'ปวช.1/1'}"`,
-      student.number || 0,
+      `"${student.number && String(student.number).includes('@') ? student.number : (student.email || 'Google Account')}"`,
       `"${student.name || ''}"`,
       `"Level ${student.level_completed || 0}"`,
       student.level_completed >= 5 ? `"สำเร็จครบทุกด่าน"` : `"กำลังดำเนินการ"`,
@@ -265,9 +264,8 @@ export default function TeacherDashboard({ onClose }) {
               <table className="min-w-full divide-y divide-[#ebdcb8]">
                 <thead className="bg-[#fbf9f4] text-[#8a6e29] font-black text-[9px] uppercase tracking-wider text-left border-b-2 border-[#ebdcb8]">
                   <tr>
-                    <th className="px-4 py-3">ห้องเรียน</th>
-                    <th className="px-4 py-3">เลขที่</th>
-                    <th className="px-4 py-3">ชื่อ - ฉายาเวทมนตร์</th>
+                    <th className="px-4 py-3">อีเมลนักเรียน (Google Account)</th>
+                    <th className="px-4 py-3">ชื่อ - นามสกุลจริง</th>
                     <th className="px-4 py-3 text-center">ผ่านด่านล่าสุด</th>
                     <th className="px-4 py-3 text-center">พลังเวทสะสม</th>
                     <th className="px-4 py-3 text-center">ตอบผิด (ครั้ง)</th>
@@ -278,8 +276,9 @@ export default function TeacherDashboard({ onClose }) {
                 <tbody className="divide-y divide-slate-100 text-xs font-bold text-slate-700 bg-white/80">
                   {filteredStudents.map((student) => (
                     <tr key={student.id} className="hover:bg-[#ebdcb8]/20 transition-colors">
-                      <td className="px-4 py-3 font-black text-slate-800">{student.classroom}</td>
-                      <td className="px-4 py-3 text-slate-500">{student.number}</td>
+                      <td className="px-4 py-3 font-black text-amber-900 truncate max-w-[200px]">
+                        📧 {student.number && String(student.number).includes('@') ? student.number : (student.email || 'Google Account')}
+                      </td>
                       <td className="px-4 py-3 font-black text-slate-850">{student.name}</td>
                       <td className="px-4 py-3 text-center">
                         <span className={`inline-flex items-center px-3 py-0.5 rounded-full text-[9px] font-black border ${

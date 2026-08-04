@@ -46,8 +46,8 @@ export default function GameBoard({ levels, unlockedLevel, completedLevels, stud
             <h2 className="text-sm font-black text-[#4c380b] tracking-wide">
               ผู้เรียน: <span className="text-[#8c530b] font-extrabold">{student.name}</span>
             </h2>
-            <p className="text-[#4c380b]/75 text-[10px] font-black uppercase tracking-wider">
-              คลาส {student.classroom} | เลขที่ {student.number}
+            <p className="text-[#4c380b]/75 text-[10px] font-black tracking-wider truncate max-w-[220px]">
+              📧 {student.email || 'Google Account'}
             </p>
           </div>
         </div>

@@ -636,8 +636,8 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
             <h2 className="text-[10px] md:text-xs font-black text-[#4c380b]">
               ผู้เรียน: <span className="text-[#8c530b] font-extrabold">{student.name}</span>
             </h2>
-            <p className="text-[#4c380b]/75 text-[8px] md:text-[9px] font-black tracking-wider">
-              ห้อง {student.classroom.split('/')[1] || student.classroom} | เลขที่ {student.number}
+            <p className="text-[#4c380b]/75 text-[8px] md:text-[9px] font-black tracking-wider truncate max-w-[180px]">
+              📧 {student.email || 'Google Account'}
             </p>
           </div>
         </div>
