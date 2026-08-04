@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Login from './components/Login';
 import GameBoard from './components/GameBoard';
 import GameArea from './components/GameArea';
@@ -6,6 +6,8 @@ import TeacherDashboard from './components/TeacherDashboard';
 import { levelsData } from './data/gameData';
 import { Trophy, RefreshCw } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import audio from './lib/audio';
+import { db, supabase, isSupabaseConfigured } from './lib/supabase';
 
 export default function App() {
   const [student, setStudent] = useState(null);
@@ -23,6 +25,71 @@ export default function App() {
   const [teacherPasscode, setTeacherPasscode] = useState('');
   const [passcodeError, setPasscodeError] = useState('');
   const [showPasswordText, setShowPasswordText] = useState(false);
+
+  // Background music state
+  const [bgMuted, setBgMuted] = useState(false);
+  const musicStarted = useRef(false);
+
+  // Start background music on first user interaction (browser security policy)
+  useEffect(() => {
+    const startMusic = () => {
+      if (!musicStarted.current) {
+        musicStarted.current = true;
+        audio.startBgMusic();
+      }
+      document.removeEventListener('click', startMusic);
+      document.removeEventListener('keydown', startMusic);
+    };
+    document.addEventListener('click', startMusic);
+    document.addEventListener('keydown', startMusic);
+    return () => {
+      document.removeEventListener('click', startMusic);
+      document.removeEventListener('keydown', startMusic);
+    };
+  }, []);
+
+  const handleToggleMusic = () => {
+    const nowMuted = audio.toggleMuteBgMusic();
+    setBgMuted(nowMuted);
+  };
+
+  // Listen to Google OAuth redirect / session on mount
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return;
+
+    const checkSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const u = session.user;
+          const googleName = u.user_metadata?.full_name || u.user_metadata?.name || u.email.split('@')[0];
+          
+          let pendingChar = null;
+          try {
+            pendingChar = JSON.parse(localStorage.getItem('lq_pending_character') || 'null');
+          } catch (e) {}
+
+          const studentData = await db.registerStudent(googleName, 'ปวช.1/1', 1);
+          setStudent({
+            ...studentData,
+            name: googleName,
+            email: u.email,
+            character: pendingChar || {
+              id: 'griffin',
+              name: 'อาร์กัส',
+              fullName: 'อาร์กัส นักสืบอาร์เคน',
+              image: '/char_argus.jpg'
+            }
+          });
+          setView('board');
+        }
+      } catch (err) {
+        console.error("Google session error:", err);
+      }
+    };
+
+    checkSession();
+  }, []);
 
   const handleTeacherAuth = (e) => {
     e.preventDefault();
@@ -160,6 +227,15 @@ export default function App() {
     <main className="min-h-screen text-slate-800 antialiased bg-gradient-to-br from-[#FAF5E6] via-[#F4E6CD] to-[#EBDCB8] font-sans relative overflow-hidden">
       {/* Floating golden magic dust particles */}
       <div className="absolute inset-0 bg-[radial-gradient(#d4af37_1.2px,transparent_1.2px)] [background-size:28px_28px] opacity-25 pointer-events-none animate-pulse"></div>
+
+      {/* 🎵 Floating Music Toggle Button */}
+      <button
+        onClick={handleToggleMusic}
+        title={bgMuted ? 'เปิดเพลงประกอบ' : 'ปิดเพลงประกอบ'}
+        className="fixed top-4 right-4 z-[999] w-10 h-10 flex items-center justify-center rounded-full bg-amber-900/80 hover:bg-amber-800 border-2 border-amber-400/60 shadow-lg text-amber-100 text-lg transition-all hover:scale-110 active:scale-95 cursor-pointer backdrop-blur-sm"
+      >
+        {bgMuted ? '🔇' : '🎵'}
+      </button>
 
       {view === 'login' && (
         <Login 

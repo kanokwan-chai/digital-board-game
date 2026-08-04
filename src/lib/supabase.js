@@ -21,6 +21,22 @@ const generateUUID = () => {
 
 // Database interface layer with fallback
 export const db = {
+  // 0. Sign in with Google OAuth
+  async signInWithGoogle() {
+    if (!isSupabaseConfigured) {
+      alert("⚠️ Supabase ยังไม่ได้ตั้งค่าการใช้งานในระบบ");
+      return;
+    }
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin
+      }
+    });
+    if (error) throw error;
+    return data;
+  },
+
   // 1. Register student
   async registerStudent(name, classroom, number) {
     if (isSupabaseConfigured) {
