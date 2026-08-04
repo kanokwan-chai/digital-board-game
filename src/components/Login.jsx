@@ -277,9 +277,6 @@ export default function Login({ onLogin, onOpenDashboard }) {
                 {loading ? 'กำลังเชื่อมต่อ Google...' : '🌐 เข้าสู่ระบบด้วย Google Account'}
               </span>
             </button>
-            <p className="text-center text-[10px] font-bold text-amber-800/80 mt-2">
-              🔒 บังคับเข้าสู่ระบบด้วยอีเมลนักเรียน (@pwc.ac.th หรือ Gmail) เท่านั้น
-            </p>
           </div>
 
           {/* Footer */}
