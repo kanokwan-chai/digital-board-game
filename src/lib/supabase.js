@@ -27,10 +27,14 @@ export const db = {
       alert("⚠️ Supabase ยังไม่ได้ตั้งค่าการใช้งานในระบบ");
       return;
     }
+    const targetUrl = window.location.origin.includes('localhost') 
+      ? window.location.origin 
+      : 'https://digital-board-game-pwc.vercel.app';
+
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.origin
+        redirectTo: targetUrl
       }
     });
     if (error) throw error;
