@@ -139,7 +139,7 @@ export default function App() {
     }
   }, [student]);
 
-  // Sync state to local storage when state changes
+  // Sync state to local storage & Supabase Cloud when state changes
   const saveProgress = (currentScore, currentUnlocked, currentCompleted) => {
     if (student) {
       localStorage.setItem(
@@ -150,6 +150,11 @@ export default function App() {
           completedLevels: currentCompleted
         })
       );
+      db.saveCloudProgress(student.id, {
+        score: currentScore,
+        unlockedLevel: currentUnlocked,
+        completedLevels: currentCompleted
+      });
     }
   };
 

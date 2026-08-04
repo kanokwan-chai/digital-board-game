@@ -41,7 +41,7 @@ export const db = {
     return data;
   },
 
-  // 0.5 Get remote student progress from Supabase
+  // 0.5 Get remote student progress from Supabase across all devices
   async getStudentProgress(studentId) {
     if (isSupabaseConfigured) {
       try {
@@ -52,10 +52,10 @@ export const db = {
         
         if (results && results.length > 0) {
           const maxLevel = results.reduce((max, r) => r.level_completed > max ? r.level_completed : max, 0);
-          const completed = [...new Set(results.map(r => r.level_completed))];
+          const completed = [...new Set(results.map(r => r.level_completed).filter(lvl => lvl > 0))];
           const latest = [...results].sort((a,b) => new Date(b.completed_at) - new Date(a.completed_at))[0];
           return {
-            unlockedLevel: Math.min(5, maxLevel + 1),
+            unlockedLevel: Math.min(5, Math.max(1, maxLevel + 1)),
             completedLevels: completed,
             score: latest ? latest.score : 100
           };
@@ -65,6 +65,32 @@ export const db = {
       }
     }
     return null;
+  },
+
+  // 0.6 Save real-time live progress to Supabase Cloud for cross-device sync
+  async saveCloudProgress(studentId, { score, unlockedLevel, completedLevels }) {
+    if (isSupabaseConfigured) {
+      try {
+        const lastCompleted = completedLevels && completedLevels.length > 0
+          ? Math.max(...completedLevels)
+          : Math.max(0, unlockedLevel - 1);
+
+        await supabase
+          .from('game_results')
+          .insert([
+            {
+              student_id: studentId,
+              level_completed: lastCompleted,
+              score: Number(score),
+              wrong_attempts: 0,
+              hints_used: 0,
+              completed_at: new Date().toISOString()
+            }
+          ]);
+      } catch (err) {
+        console.error("Error saving cloud progress:", err);
+      }
+    }
   },
 
   // 1. Register student
