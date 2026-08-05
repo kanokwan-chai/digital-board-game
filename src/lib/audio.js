@@ -14,7 +14,7 @@ class AudioManager {
   constructor() {
     this.bgMusic = null;
     this.bgMusicPlaying = false;
-    this.bgVolume = 0.38;
+    this.bgVolume = 0.65; // เพิ่มเสียงพื้นหลังให้ดังขึ้นตามคำขอ
     this.bgMuted = false;
     
     // Cache for SFX

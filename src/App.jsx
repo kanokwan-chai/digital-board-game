@@ -186,6 +186,11 @@ export default function App() {
     setScore(prev => {
       const nextScore = Math.max(0, prev + points);
       saveProgress(nextScore, unlockedLevel, completedLevels);
+      
+      if (nextScore <= 0 && prev > 0) {
+        audio.playLose();
+      }
+      
       return nextScore;
     });
   };
