@@ -14,7 +14,7 @@ class AudioManager {
   constructor() {
     this.bgMusic = null;
     this.bgMusicPlaying = false;
-    this.bgVolume = 0.65; // เพิ่มเสียงพื้นหลังให้ดังขึ้นตามคำขอ
+    this.bgVolume = 0.85; // เพิ่มเสียงพื้นหลังให้ดังขึ้นอีก
     this.bgMuted = false;
     
     // Cache for SFX
@@ -24,8 +24,8 @@ class AudioManager {
   // Helper to play SFX
   _playSfx(filename) {
     try {
-      const audio = new Audio(`/sounds/${filename}`);
-      audio.volume = 0.5; // ปรับความดังของเอฟเฟกต์ (0.0 - 1.0)
+      const audio = new Audio(`/sounds/${filename}?t=${new Date().getTime()}`); // ป้องกันแคช
+      audio.volume = 1.0; // เพิ่มความดังเอฟเฟกต์ให้ชัดสุด
       audio.play().catch(e => console.log("SFX play prevented:", e));
     } catch (err) {
       console.log("Error playing SFX:", err);
@@ -41,7 +41,7 @@ class AudioManager {
     
     try {
       if (!this.bgMusic) {
-        this.bgMusic = new Audio('/sounds/bgm.mp3');
+        this.bgMusic = new Audio(`/sounds/bgm.mp3?t=${new Date().getTime()}`);
         this.bgMusic.loop = true;
       }
       this.bgMusic.volume = this.bgMuted ? 0 : this.bgVolume;
