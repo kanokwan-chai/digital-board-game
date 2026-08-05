@@ -95,9 +95,14 @@ class AudioManager {
     this._playSfx('success.mp3');
   }
 
-  // เสียงร่ายเวทล้มเหลว/คำตอบผิด
+  // เสียงร่ายเวทล้มเหลว/คำตอบผิด (ตอบผิดธรรมดา)
   playError() {
     this._playSfx('error.mp3');
+  }
+
+  // เสียงตอนแพ้เกม (Game Over)
+  playLose() {
+    this._playSfx('lose.mp3');
   }
 
   // เสียงคลิกปุ่มประตูปุ่มทหารทั่วไป
