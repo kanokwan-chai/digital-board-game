@@ -364,58 +364,29 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
     const expected = currentMission.expectedPattern;
     let isMatch = false;
 
-    // Structure types check (e.g. Statement, Operator, Statement)
-    const placedTypes = placedCards.map(c => c.type === 'Statement' ? 'Statement' : c.operator);
-    const expectedTypes = expected.map(item => (item === 'P' || item === 'Q' || item === 'R' || item === 'S') ? 'Statement' : item);
+    const placedPattern = placedCards.map(c => c.operator || c.id);
+    const exactIdMatch = placedPattern.length === expected.length &&
+                       placedPattern.every((val, index) => val === expected[index]);
 
-    const structureMatch = placedTypes.length === expectedTypes.length &&
-                           placedTypes.every((type, idx) => type === expectedTypes[idx]);
-
-    if (structureMatch) {
-      let evalSuccess = false;
-
-      if (placedCards.length === 3 && placedCards[1].type === 'Operator') {
-        const v1 = placedCards[0].value;
-        const op = placedCards[1].operator;
-        const v2 = placedCards[2].value;
-
-        if (op === 'AND') evalSuccess = (v1 && v2);
-        else if (op === 'OR') evalSuccess = (v1 || v2);
-        else if (op === 'IFF') evalSuccess = (v1 === v2);
-        else if (op === 'IF_THEN') evalSuccess = (!v1 || v2);
-      } else if (placedCards.length === 2 && placedCards[0].operator === 'NOT') {
-        evalSuccess = (!placedCards[1].value);
-      } else {
-        // For multi-card expressions (L4 & L5), evaluate exact or truth-value matching
-        const exactIdMatch = placedCards.every((c, idx) => {
-          const expId = expected[idx];
-          if (c.type === 'Statement') {
-            const expCard = currentMission.cards.find(m => m.id === expId);
-            return expCard ? c.value === expCard.value : true;
-          }
-          return (c.operator || c.id) === expId;
-        });
-        evalSuccess = exactIdMatch;
-      }
-
-      if (evalSuccess) {
+    if (exactIdMatch) {
+      isMatch = true;
+    } else if (expected.length === 3 && (expected[1] === 'AND' || expected[1] === 'OR' || expected[1] === 'IFF')) {
+      // Commutative match for 3 cards (e.g. P AND Q == Q AND P)
+      const op = expected[1];
+      const commMatch = placedPattern.length === 3 && placedPattern[1] === op &&
+                        ((placedPattern[0] === expected[0] && placedPattern[2] === expected[2]) ||
+                         (placedPattern[0] === expected[2] && placedPattern[2] === expected[0]));
+      if (commMatch) isMatch = true;
+    } else if (expected.length === 6 && expected[1] === 'AND' && expected[3] === 'AND') {
+      // Level 4 specific: P AND Q AND NOT R -> allow Q AND P AND NOT R
+      if (placedPattern.length === 6 && 
+          placedPattern[0] === expected[2] && 
+          placedPattern[1] === 'AND' && 
+          placedPattern[2] === expected[0] && 
+          placedPattern[3] === 'AND' && 
+          placedPattern[4] === expected[4] && 
+          placedPattern[5] === expected[5]) {
         isMatch = true;
-      }
-    }
-
-    // Fallback exact ID / commutative check
-    if (!isMatch) {
-      const placedPattern = placedCards.map(c => c.operator || c.id);
-      const exactIdMatch = placedPattern.length === expected.length &&
-                         placedPattern.every((val, index) => val === expected[index]);
-      if (exactIdMatch) {
-        isMatch = true;
-      } else if (expected.length === 3 && (expected[1] === 'AND' || expected[1] === 'OR' || expected[1] === 'IFF')) {
-        const op = expected[1];
-        const commMatch = placedPattern.length === 3 && placedPattern[1] === op &&
-                          ((placedPattern[0] === expected[0] && placedPattern[2] === expected[2]) ||
-                           (placedPattern[0] === expected[2] && placedPattern[2] === expected[0]));
-        if (commMatch) isMatch = true;
       }
     }
 

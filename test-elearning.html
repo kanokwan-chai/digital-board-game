@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>หน้าต่างจำลองระบบ E-Learning</title>
+  <style>
+    body { font-family: 'Sarabun', sans-serif; padding: 20px; background: #f0f2f5; }
+    .dashboard { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 800px; margin: 0 auto; }
+    .btn { background: #4f46e5; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; }
+    .btn:hover { background: #4338ca; }
+    .score-box { margin-top: 20px; padding: 15px; background: #ecfdf5; border: 2px dashed #10b981; border-radius: 8px; display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard">
+    <h2>📚 หน้าระบบ E-Learning (จำลอง)</h2>
+    <p>คลิกปุ่มด้านล่างเพื่อเปิดเกมตรรกศาสตร์ (ระบบจะเปิดแท็บใหม่)</p>
+    
+    <button class="btn" onclick="openGame()">🎮 เข้าสู่บทเรียน: บอร์ดเกมตรรกศาสตร์</button>
+
+    <div id="scoreDisplay" class="score-box">
+      <h3 style="color: #047857; margin-top: 0;">✅ ได้รับคะแนนจากเกมเรียบร้อยแล้ว!</h3>
+      <p>คะแนนที่ทำได้: <strong id="scoreValue" style="font-size: 24px;">0</strong> คะแนน</p>
+      <p><i>(โปรแกรมเมอร์สามารถนำตัวเลขนี้ไปยิง API เซฟลงฐานข้อมูลของ E-Learning ต่อได้เลย)</i></p>
+    </div>
+  </div>
+
+  <script>
+    // 1. ฟังก์ชันเปิดหน้าเกม
+    function openGame() {
+      // เปิดเว็บเกมบน Vercel ในแท็บใหม่
+      window.open('https://digital-board-game-pwc.vercel.app', '_blank');
+    }
+
+    // 2. ฟังก์ชัน "ดักฟัง" (Listener) เพื่อรอรับคะแนนจากหน้าเกม
+    window.addEventListener('message', function(event) {
+      
+      // ตรวจสอบว่าข้อความส่งมาจากหน้าเว็บเกมของเราจริงๆ (เพื่อความปลอดภัย)
+      if (event.origin !== 'https://digital-board-game-pwc.vercel.app') {
+        return; 
+      }
+
+      // ตรวจสอบว่าใช่ข้อความ "เกมจบ" (BOARD_GAME_COMPLETED) หรือไม่
+      if (event.data && event.data.type === 'BOARD_GAME_COMPLETED') {
+          
+          // ดึงคะแนนออกมาจาก payload
+          const finalScore = event.data.payload.score;
+          
+          // โชว์คะแนนขึ้นหน้าจอ
+          document.getElementById('scoreDisplay').style.display = 'block';
+          document.getElementById('scoreValue').innerText = finalScore;
+          
+          // แจ้งเตือน Alert
+          alert("🎉 ยินดีด้วย! ระบบ E-Learning ได้รับคะแนนจากบอร์ดเกมแล้ว: " + finalScore + " คะแนน");
+          
+          // --- โค้ดส่วนที่ต้องนำไปปรับใช้ ---
+          // ตรงนี้คือจุดที่โปรแกรมเมอร์จะต้องเขียนโค้ดเพื่อเซฟคะแนนลงฐานข้อมูล
+          console.log("คะแนนที่ต้องเอาไปเซฟ:", finalScore);
+      }
+    });
+  </script>
+
+</body>
+</html>
