@@ -220,15 +220,14 @@ export const db = {
       const localResults = JSON.parse(localStorage.getItem('lq_game_results') || '[]');
       students = localStudents;
       results = localResults;
-    }
-
-    // Filter out student records before clearedAt timestamp
-    if (clearedAt) {
-      const clearTime = new Date(clearedAt).getTime();
-      students = students.filter(s => {
-        if (!s.created_at) return false;
-        return new Date(s.created_at).getTime() > clearTime;
-      });
+      
+      if (clearedAt) {
+        const clearTime = new Date(clearedAt).getTime();
+        students = students.filter(s => {
+          if (!s.created_at) return false;
+          return new Date(s.created_at).getTime() > clearTime;
+        });
+      }
     }
 
     return students.map(student => {

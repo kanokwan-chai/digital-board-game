@@ -69,8 +69,18 @@ export default function App() {
           try {
             pendingChar = JSON.parse(localStorage.getItem('lq_pending_character') || 'null');
           } catch (e) {}
-
-          const studentData = await db.registerStudent(googleName, 'ปวช.1/1', 1);
+          const hashEmailToNumber = (email) => {
+            if (!email) return 1;
+            let hash = 0;
+            for (let i = 0; i < email.length; i++) {
+              hash = ((hash << 5) - hash) + email.charCodeAt(i);
+              hash |= 0;
+            }
+            return Math.abs(hash) % 1000000;
+          };
+          
+          const uniqueNumber = hashEmailToNumber(u.email);
+          const studentData = await db.registerStudent(googleName, 'Google Classroom', uniqueNumber);
           setStudent({
             ...studentData,
             name: googleName,
