@@ -212,9 +212,10 @@ export default function App() {
 
     // Trigger congratulations popup if final level is completed!
     if (levelId === 5) {
-      // Send result to E-Learning platform (parent iframe)
-      if (window.parent) {
-        window.parent.postMessage({
+      // Send result to E-Learning platform (parent iframe or opener window)
+      const targetWindow = window.opener || window.parent;
+      if (targetWindow && targetWindow !== window) {
+        targetWindow.postMessage({
           type: 'BOARD_GAME_COMPLETED',
           payload: {
             score: score,
