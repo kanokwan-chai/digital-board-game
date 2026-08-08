@@ -623,7 +623,9 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
       <div className="w-full max-w-5xl bg-gradient-to-r from-[#ebdcb8] to-[#f5ebd0] border-2 border-[#d4af37] rounded-2xl md:rounded-3xl p-3 md:p-4 flex items-center justify-between gap-3 md:gap-4 mb-4 md:mb-6 shadow-xl border-b-6 border-b-[#c2a65d] z-10 text-[#5c4613]">
         <div className="flex items-center gap-2 md:gap-3">
           <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-amber-400 bg-white overflow-hidden shadow-lg flex items-center justify-center p-0 relative">
-            {student.character?.image ? (
+            {student.avatar_url ? (
+              <img src={student.avatar_url} alt={student.name} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
+            ) : student.character?.image ? (
               <img src={student.character.image} alt={student.character.name} className="w-full h-full object-cover" />
             ) : (
               <span className="text-xl md:text-2xl filter drop-shadow">{student.character?.avatar || "🧙‍♂️"}</span>

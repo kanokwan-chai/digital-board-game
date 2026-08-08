@@ -37,7 +37,11 @@ export default function GameBoard({ levels, unlockedLevel, completedLevels, stud
         {/* Left Profile */}
         <div className="flex items-center gap-3">
           <div className="w-14 h-14 rounded-full border-2 border-amber-400 bg-white overflow-hidden shadow-lg flex items-center justify-center p-0.5 relative">
-            <span className="text-3xl filter drop-shadow">{student.character?.avatar || "🧙‍♂️"}</span>
+            {student.avatar_url ? (
+              <img src={student.avatar_url} alt="Profile" className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
+            ) : (
+              <span className="text-3xl filter drop-shadow">{student.character?.avatar || "🧙‍♂️"}</span>
+            )}
             <div className="absolute -bottom-1 -right-1 bg-amber-600 border border-amber-300 text-white text-[7px] font-black px-1.5 py-0.5 rounded-full shadow">
               {student.character?.ability}
             </div>

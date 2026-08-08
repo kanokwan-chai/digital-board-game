@@ -63,6 +63,7 @@ export default function App() {
         if (session?.user) {
           const u = session.user;
           const googleName = u.user_metadata?.full_name || u.user_metadata?.name || u.email.split('@')[0];
+          const avatarUrl = u.user_metadata?.avatar_url || null; // ดึงโปรไฟล์ Google
           
           let pendingChar = null;
           try {
@@ -74,6 +75,7 @@ export default function App() {
             ...studentData,
             name: googleName,
             email: u.email,
+            avatar_url: avatarUrl, // เซฟลง State
             character: pendingChar || {
               id: 'griffin',
               name: 'อาร์กัส',
