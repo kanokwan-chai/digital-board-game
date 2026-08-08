@@ -263,10 +263,10 @@ export const levelsData = [
           { id: "OR", type: "Operator", content: "หรือ", operator: "OR", image: "/images/statements/op_or.png" }, 
           { id: "NOT", type: "Operator", content: "ไม่", operator: "NOT", image: "/images/statements/op_not.png" },
           { id: "NOT", type: "Operator", content: "ไม่", operator: "NOT", image: "/images/statements/op_not.png" },
-          { id: "OPEN_BRACKET", type: "Operator", content: "(", operator: "(", image: "/images/statements/op_open.png" },
-          { id: "CLOSE_BRACKET", type: "Operator", content: ")", operator: ")", image: "/images/statements/op_close.png" }
+          { id: "(", type: "Operator", content: "(", operator: "(", image: "/images/statements/op_open.png" },
+          { id: ")", type: "Operator", content: ")", operator: ")", image: "/images/statements/op_close.png" }
         ],
-        expectedPattern: ["OPEN_BRACKET", "P", "OR", "Q", "CLOSE_BRACKET", "AND", "NOT", "R"],
+        expectedPattern: ["(", "P", "OR", "Q", ")", "AND", "NOT", "R"],
         evaluate: (exprValues) => (exprValues.P || exprValues.Q) && !exprValues.R
       },
       {
@@ -283,10 +283,10 @@ export const levelsData = [
           { id: "AND", type: "Operator", content: "และ", operator: "AND", image: "/images/statements/op_and.png" },
           { id: "IF_THEN", type: "Operator", content: "ถ้า...แล้ว", operator: "IF_THEN", image: "/images/statements/op_if.png" },
           { id: "IF_THEN", type: "Operator", content: "ถ้า...แล้ว", operator: "IF_THEN", image: "/images/statements/op_if.png" },
-          { id: "OPEN_BRACKET", type: "Operator", content: "(", operator: "(", image: "/images/statements/op_open.png" },
-          { id: "CLOSE_BRACKET", type: "Operator", content: ")", operator: ")", image: "/images/statements/op_close.png" }
+          { id: "(", type: "Operator", content: "(", operator: "(", image: "/images/statements/op_open.png" },
+          { id: ")", type: "Operator", content: ")", operator: ")", image: "/images/statements/op_close.png" }
         ],
-        expectedPattern: ["OPEN_BRACKET", "P", "AND", "Q", "CLOSE_BRACKET", "IF_THEN", "R"],
+        expectedPattern: ["(", "P", "AND", "Q", ")", "IF_THEN", "R"],
         evaluate: (exprValues) => !(exprValues.P && exprValues.Q) || exprValues.R
       }
     ]

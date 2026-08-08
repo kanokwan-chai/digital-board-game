@@ -212,6 +212,18 @@ export default function App() {
 
     // Trigger congratulations popup if final level is completed!
     if (levelId === 5) {
+      // Send result to E-Learning platform (parent iframe)
+      if (window.parent) {
+        window.parent.postMessage({
+          type: 'BOARD_GAME_COMPLETED',
+          payload: {
+            score: score,
+            stagesCleared: nextCompleted.length,
+            attempts: 1 
+          }
+        }, '*');
+      }
+
       setTimeout(() => {
         setShowGameCompleteModal(true);
         triggerEndlessConfetti();
