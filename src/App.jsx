@@ -231,7 +231,7 @@ export default function App() {
         targetWindow.postMessage({
           type: 'BOARD_GAME_COMPLETED',
           payload: {
-            score: score,
+            score: currentScore,
             stagesCleared: nextCompleted.length,
             attempts: 1 
           }
