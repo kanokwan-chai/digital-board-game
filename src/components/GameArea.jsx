@@ -295,7 +295,10 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
       setSortingActiveIdx(prev => prev + 1);
     } else {
       triggerConfetti();
-      saveLevelResult();
+      let finalPoints = isCorrect ? 10 : -5;
+      if (finalPoints === 10 && student.character?.id === 'basilisk') finalPoints = 12;
+      if (finalPoints === -5 && student.character?.id === 'unicorn') finalPoints = -3;
+      saveLevelResult(score + finalPoints);
     }
   };
 
@@ -430,7 +433,9 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
           setCurrentMissionIdx(prev => prev + 1);
         } else {
           setDiscardedCards(prev => [...prev, ...placedCards]);
-          saveLevelResult();
+          let finalPoints = 10;
+          if (student.character?.id === 'basilisk') finalPoints = 12;
+          saveLevelResult(score + finalPoints);
         }
       }, 2500);
     } else {
@@ -465,16 +470,16 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
     });
   };
 
-  const saveLevelResult = async () => {
+  const saveLevelResult = async (finalScore) => {
     try {
       await db.saveGameResult({
         studentId: student.id,
         levelCompleted: level.id,
-        score: score,
+        score: finalScore !== undefined ? finalScore : score,
         wrongAttempts: wrongAttempts,
         hintsUsed: hintsUsed
       });
-      onLevelCompleted(level.id);
+      onLevelCompleted(level.id, finalScore !== undefined ? finalScore : score);
     } catch (err) {
       console.error(err);
     }

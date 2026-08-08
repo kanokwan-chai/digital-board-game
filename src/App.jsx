@@ -197,7 +197,8 @@ export default function App() {
     });
   };
 
-  const handleLevelCompleted = (levelId) => {
+  const handleLevelCompleted = (levelId, finalScore) => {
+    const currentScore = finalScore !== undefined ? finalScore : score;
     let nextUnlocked = unlockedLevel;
     const nextCompleted = completedLevels.includes(levelId)
       ? completedLevels
@@ -209,7 +210,7 @@ export default function App() {
     }
 
     setCompletedLevels(nextCompleted);
-    saveProgress(score, nextUnlocked, nextCompleted);
+    saveProgress(currentScore, nextUnlocked, nextCompleted);
     setView('board');
 
     // Trigger congratulations popup if final level is completed!
