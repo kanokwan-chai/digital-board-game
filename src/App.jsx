@@ -59,10 +59,10 @@ export default function App() {
 
     const checkSession = async () => {
       try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const autoLogin = urlParams.get('autoLogin');
+        const urlParams = new URLSearchParams(window.location.search.toLowerCase());
+        const autoLogin = urlParams.get('autologin');
         const queryEmail = urlParams.get('email');
-        const queryStudentId = urlParams.get('student_id');
+        const queryStudentId = urlParams.get('student_id') || urlParams.get('studentid');
 
         let u = null;
 
@@ -98,7 +98,14 @@ export default function App() {
           };
           
           const uniqueNumber = hashEmailToNumber(u.email);
-          const studentData = await db.registerStudent(googleName, 'Google Classroom', uniqueNumber);
+          
+          let studentData = { id: `local-${uniqueNumber}`, name: googleName, classroom: 'Google Classroom', student_number: uniqueNumber };
+          try {
+             studentData = await db.registerStudent(googleName, 'Google Classroom', uniqueNumber);
+          } catch (dbErr) {
+             console.warn("DB registration failed, using local mock", dbErr);
+          }
+          
           setStudent({
             ...studentData,
             name: googleName,

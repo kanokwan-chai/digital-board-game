@@ -70,7 +70,7 @@ export default function Login({ onLogin, onOpenDashboard }) {
   const [error, setError] = useState('');
   const [showQuickRules, setShowQuickRules] = useState(false);
   
-  const isEmbedded = new URLSearchParams(window.location.search).get('embedded') === 'true';
+  const isEmbedded = new URLSearchParams(window.location.search).get('embedded') === 'true' || window.self !== window.top;
 
   const handleGoogleLogin = async () => {
     setLoading(true);
