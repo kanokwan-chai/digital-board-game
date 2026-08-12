@@ -63,15 +63,18 @@ export default function App() {
         const autoLogin = urlParams.get('autologin');
         const queryEmail = urlParams.get('email');
         const queryStudentId = urlParams.get('student_id') || urlParams.get('studentid');
+        // Search params are lowercased, so we look for 'name'
+        const queryName = urlParams.get('name');
 
         let u = null;
 
         if (autoLogin === 'true' && (queryEmail || queryStudentId)) {
           const identifier = queryEmail || queryStudentId;
+          const displayName = queryName || identifier.split('@')[0];
           u = {
             email: identifier.includes('@') ? identifier : `${identifier}@student.local`,
             user_metadata: {
-              full_name: identifier.split('@')[0],
+              full_name: displayName,
             }
           };
         } else {
