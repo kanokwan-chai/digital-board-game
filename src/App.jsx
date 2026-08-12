@@ -59,9 +59,27 @@ export default function App() {
 
     const checkSession = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          const u = session.user;
+        const urlParams = new URLSearchParams(window.location.search);
+        const autoLogin = urlParams.get('autoLogin');
+        const queryEmail = urlParams.get('email');
+        const queryStudentId = urlParams.get('student_id');
+
+        let u = null;
+
+        if (autoLogin === 'true' && (queryEmail || queryStudentId)) {
+          const identifier = queryEmail || queryStudentId;
+          u = {
+            email: identifier.includes('@') ? identifier : `${identifier}@student.local`,
+            user_metadata: {
+              full_name: identifier.split('@')[0],
+            }
+          };
+        } else {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user) u = session.user;
+        }
+
+        if (u) {
           const googleName = u.user_metadata?.full_name || u.user_metadata?.name || u.email.split('@')[0];
           const avatarUrl = u.user_metadata?.avatar_url || null; // ดึงโปรไฟล์ Google
           
