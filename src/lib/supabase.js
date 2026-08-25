@@ -220,14 +220,14 @@ export const db = {
       const localResults = JSON.parse(localStorage.getItem('lq_game_results') || '[]');
       students = localStudents;
       results = localResults;
-      
-      if (clearedAt) {
-        const clearTime = new Date(clearedAt).getTime();
-        students = students.filter(s => {
-          if (!s.created_at) return false;
-          return new Date(s.created_at).getTime() > clearTime;
-        });
-      }
+    }
+
+    if (clearedAt) {
+      const clearTime = new Date(clearedAt).getTime();
+      students = students.filter(s => {
+        if (!s.created_at) return false;
+        return new Date(s.created_at).getTime() > clearTime;
+      });
     }
 
     return students.map(student => {
@@ -271,17 +271,32 @@ export const db = {
 
     if (isSupabaseConfigured) {
       try {
-        const { data: students } = await supabase.from('students').select('id');
-        if (students && students.length > 0) {
-          const ids = students.map(s => s.id);
-          await supabase.from('students').update({ name: '[DELETED]', classroom: 'DELETED' }).in('id', ids);
+        // Mass delete all game results
+        await supabase.from('game_results').delete().neq('level_completed', -999);
+        
+        // Mass delete all students
+        const { error: delStuErr } = await supabase.from('students').delete().neq('number', -999);
+        if (delStuErr) {
+           console.error("Error deleting students:", delStuErr);
+           alert("เกิดข้อผิดพลาดในการลบข้อมูลบนคลาวด์: " + delStuErr.message + " (กรุณาติดต่อผู้พัฒนา หรือเคลียร์แคชเบราว์เซอร์)");
+           // Fallback to update
+           await supabase.from('students').update({ name: '[DELETED]', classroom: 'DELETED' }).neq('number', -999);
         }
       } catch (err) {
         console.error("Supabase error clearing data:", err);
       }
     }
+    
     localStorage.removeItem('lq_students');
     localStorage.removeItem('lq_game_results');
+    
+    // Also remove all individual progress and unlock keys
+    const keys = Object.keys(localStorage);
+    keys.forEach(key => {
+      if (key.startsWith('lq_progress_') || key.startsWith('lq_unlock_')) {
+        localStorage.removeItem(key);
+      }
+    });
   },
 
   // 5. Unlock replay for a specific student without deleting score history

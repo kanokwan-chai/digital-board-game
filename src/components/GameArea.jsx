@@ -68,7 +68,7 @@ export function PrologueSlideshow({ onDone, audioLib }) {
       {/* Image container using exact 3:2 aspect ratio so full image is visible without cropping */}
       <div className="relative w-full aspect-[3/2] bg-[#1a1208] flex items-center justify-center overflow-hidden">
         <img src={slide.image} alt={slide.title} className="w-full h-full object-contain" />
-        <div className="absolute top-2.5 left-2.5 bg-[#8b0000] text-amber-100 text-[10px] font-black px-3 py-0.5 rounded-full border border-[#b8860b] shadow z-10">
+        <div className="absolute top-2.5 left-2.5 bg-[#8b0000] text-amber-100 text-[10px] md:text-xs font-black px-3 py-0.5 rounded-full border border-[#b8860b] shadow z-10">
           📖 {slide.chapter} ({slideIdx + 1}/{prologueSlides.length})
         </div>
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 bg-black/50 px-2.5 py-0.5 rounded-full backdrop-blur-sm z-10">
@@ -606,15 +606,15 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
             ) : (
               <span className="text-xl md:text-2xl filter drop-shadow">{student.character?.avatar || "🧙‍♂️"}</span>
             )}
-            <div className="absolute -bottom-1 -right-1 bg-amber-600 border border-amber-300 text-white text-[5px] md:text-[6px] font-black px-1.5 py-0.2 rounded-full">
+            <div className="absolute -bottom-1 -right-1 bg-amber-600 border border-amber-300 text-white text-[8px] md:text-[10px] font-black px-1.5 py-0.2 rounded-full">
               {student.character?.ability}
             </div>
           </div>
           <div>
-            <h2 className="text-[10px] md:text-xs font-black text-[#4c380b]">
+            <h2 className="text-xs md:text-sm font-black text-[#4c380b]">
               ผู้เรียน: <span className="text-[#8c530b] font-extrabold">{student.name}</span>
             </h2>
-            <p className="text-[#4c380b]/75 text-[8px] md:text-[9px] font-black tracking-wider truncate max-w-[180px]">
+            <p className="text-[#4c380b]/75 text-[10px] md:text-xs font-black tracking-wider truncate max-w-[180px]">
               📧 {student.email || 'Google Account'}
             </p>
           </div>
@@ -622,11 +622,11 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
 
         {/* Level Title */}
         <div className="text-center">
-          <span className="px-2 md:px-3 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-full text-[8px] md:text-[9px] font-black text-[#8a6e29] uppercase tracking-wider">
+          <span className="px-2 md:px-3 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-full text-[10px] md:text-xs font-black text-[#8a6e29] uppercase tracking-wider">
             {level.title.split(':')[0]}
           </span>
           {level.gameType === 'builder' && (
-            <div className="mt-0.5 text-[8px] md:text-[10px] font-black text-[#5c4613]/70">
+            <div className="mt-0.5 text-xs font-black text-[#5c4613]/70">
               ข้อ {currentMissionIdx + 1}/{level.missions.length}
             </div>
           )}
@@ -639,12 +639,12 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
               audio.playClick();
               setShowStoryModal(true);
             }}
-            className="px-2 md:px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 rounded-xl font-black text-[9px] md:text-[10px] transition-all shadow-xs flex items-center gap-1 cursor-pointer"
+            className="px-2.5 md:px-4 py-1.5 md:py-2 bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 rounded-xl font-black text-xs md:text-sm transition-all shadow-xs flex items-center gap-1 cursor-pointer"
             title="เปิดอ่านเนื้อเรื่องบันทึกคดี"
           >
             📖 เนื้อเรื่องคดี
           </button>
-          <div className="bg-[#fffcf5] border border-amber-300 px-2 md:px-3.5 py-1 rounded-xl font-black text-amber-705 text-[10px] md:text-xs shadow-sm">
+          <div className="bg-[#fffcf5] border border-amber-300 px-3 md:px-4 py-1.5 md:py-2 rounded-xl font-black text-amber-705 text-xs md:text-sm shadow-sm">
             {score} 🔮
           </div>
           <button 
@@ -652,7 +652,7 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
               audio.playClick();
               onBackToMap();
             }}
-            className="px-2.5 py-1 bg-gradient-to-r from-red-800 to-rose-900 hover:from-red-900 hover:to-rose-950 text-white font-black rounded-lg border border-red-650 shadow transition-all text-[9px] md:text-[10px] border-b-4 border-b-red-950 cursor-pointer"
+            className="px-3 md:px-4 py-1.5 md:py-2 bg-gradient-to-r from-red-800 to-rose-900 hover:from-red-900 hover:to-rose-950 text-white font-black rounded-lg border border-red-650 shadow transition-all text-xs md:text-sm border-b-4 border-b-red-950 cursor-pointer"
           >
             ออก
           </button>
@@ -722,15 +722,15 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
               {/* Right Panel */}
               <div className="md:col-span-7 bg-[#fdf5dd] border-8 border-[#5c4613] rounded-[28px] md:rounded-[32px] p-4 md:p-6 shadow-2xl flex flex-col justify-between border-b-16 border-b-[#42310b] text-[#4c380b] ring-12 ring-amber-500/5">
                 
-                <div className="border border-red-500/35 bg-[#fff5f5]/85 rounded-xl p-3 shadow-inner">
-                  <span className="px-3 py-0.5 bg-red-800 text-amber-100 rounded-full text-[8px] font-black tracking-wider uppercase">
+                <div className="border border-red-500/35 bg-[#fff5f5]/85 rounded-xl p-3 md:p-4 shadow-inner">
+                  <span className="px-3 py-1 bg-red-800 text-amber-100 rounded-full text-[10px] md:text-xs font-black tracking-wider uppercase">
                     ข้อที่ {sortingActiveIdx + 1}/10
                   </span>
                   
-                  <h3 className="text-sm md:text-base font-black text-red-950 mt-1.5 font-sans">
+                  <h3 className="text-sm md:text-base font-black text-red-950 mt-2 font-sans">
                     💡 กิจกรรมคัดแยกประพจน์
                   </h3>
-                  <p className="text-red-900 text-[8px] md:text-[10px] font-bold mt-1 leading-relaxed">
+                  <p className="text-red-900 text-xs mt-1.5 leading-relaxed">
                     คลิกเลือกปุ่มด้านล่างเพื่อระบุว่าข้อความการ์ดทางซ้ายมือ เป็นประพจน์จริง เป็นประพจน์เท็จ หรือไม่ใช่ประพจน์
                   </p>
                 </div>
@@ -827,7 +827,7 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
                 <span className="text-xs font-black text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
                   ⚡ แท่นวางวงจรตรรกศาสตร์ (Magic Logic Circuit)
                 </span>
-                <span className="text-[10px] font-black text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-300">
+                <span className="text-xs font-black text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-300">
                   {placedCards.length} การ์ดในแท่น
                 </span>
               </div>
@@ -861,7 +861,7 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
                             <img src={card.image || "/wizard_student.jpg"} alt={card.content} className="w-full h-full object-contain select-none pointer-events-none" />
                             {isStatement && (
                               <div className="absolute bottom-0 inset-x-0 bg-[#fffdf5]/95 border-t-2 border-amber-300 px-1.5 py-1 text-center backdrop-blur-xs">
-                                <p className="text-[10px] md:text-xs font-black text-amber-950 leading-tight line-clamp-2" title={card.content}>
+                                <p className="text-xs font-black text-amber-950 leading-tight line-clamp-2" title={card.content}>
                                   {card.content}
                                 </p>
                               </div>
