@@ -23,6 +23,7 @@ class AudioManager {
 
   // Helper to play SFX
   _playSfx(filename) {
+    if (this.bgMuted) return; // Mute all sound effects when bgMuted is true
     try {
       const audio = new Audio(`/sounds/${filename}?t=${new Date().getTime()}`); // ป้องกันแคช
       audio.volume = 1.0; // เพิ่มความดังเอฟเฟกต์ให้ชัดสุด

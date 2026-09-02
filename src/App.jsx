@@ -307,7 +307,7 @@ export default function App() {
       {/* 🎵 Floating Music Toggle Button */}
       <button
         onClick={handleToggleMusic}
-        title={bgMuted ? 'เปิดเพลงประกอบ' : 'ปิดเพลงประกอบ'}
+        title={bgMuted ? 'เปิดเสียง' : 'ปิดเสียง'}
         className="fixed bottom-4 right-4 z-[999] w-10 h-10 flex items-center justify-center rounded-full bg-amber-900/80 hover:bg-amber-800 border-2 border-amber-400/60 shadow-lg text-amber-100 text-lg transition-all hover:scale-110 active:scale-95 cursor-pointer backdrop-blur-sm"
       >
         {bgMuted ? '🔇' : '🎵'}
