@@ -464,6 +464,14 @@ export default function App() {
           </div>
         </div>
       )}
+      {/* Mobile Portrait Warning Overlay */}
+      <div className="fixed inset-0 z-[10000] bg-slate-950/95 backdrop-blur-md flex flex-col items-center justify-center p-8 text-center text-white landscape:hidden md:hidden">
+        <div className="text-7xl mb-6 animate-pulse">📱🔄</div>
+        <h2 className="text-2xl font-black mb-3 text-amber-400">กรุณาหมุนจอเป็นแนวนอน</h2>
+        <p className="text-sm font-bold text-slate-300 leading-relaxed max-w-xs">
+          เพื่อประสบการณ์การเล่นเกมสืบสวนที่สมบูรณ์ที่สุดและไม่อึดอัด กรุณาหมุนโทรศัพท์ของคุณเป็นแนวนอน (Landscape)
+        </p>
+      </div>
     </main>
   );
 }
