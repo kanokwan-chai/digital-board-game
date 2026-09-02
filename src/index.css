@@ -3,9 +3,12 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    font-size: 18px; /* Increase base font size from 16px to 18px for better readability */
+  }
   body {
     @apply antialiased text-slate-800 bg-slate-50;
-    font-family: 'Prompt', 'Outfit', 'Inter', sans-serif;
+    font-family: 'Noto Sans Thai', sans-serif;
   }
 }
 
