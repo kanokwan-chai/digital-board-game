@@ -25,6 +25,8 @@ export default function App() {
   const [teacherPasscode, setTeacherPasscode] = useState('');
   const [passcodeError, setPasscodeError] = useState('');
   const [showPasswordText, setShowPasswordText] = useState(false);
+  
+  const [dismissPortraitWarning, setDismissPortraitWarning] = useState(false);
 
   // Background music state
   const [bgMuted, setBgMuted] = useState(false);
@@ -465,13 +467,23 @@ export default function App() {
         </div>
       )}
       {/* Mobile Portrait Warning Overlay */}
-      <div className="fixed inset-0 z-[10000] bg-slate-950/95 backdrop-blur-md flex-col items-center justify-center p-8 text-center text-white hidden portrait:flex">
-        <div className="text-7xl mb-6 animate-pulse">📱🔄</div>
-        <h2 className="text-2xl font-black mb-3 text-amber-400">กรุณาหมุนจอเป็นแนวนอน</h2>
-        <p className="text-sm font-bold text-slate-300 leading-relaxed max-w-xs">
-          เพื่อประสบการณ์การเล่นเกมสืบสวนที่สมบูรณ์ที่สุดและไม่อึดอัด กรุณาหมุนโทรศัพท์ของคุณเป็นแนวนอน (Landscape)
-        </p>
-      </div>
+      {!dismissPortraitWarning && (
+        <div className="fixed inset-0 z-[10000] bg-slate-950/80 backdrop-blur-sm flex-col items-center justify-center p-4 text-center hidden portrait:flex">
+          <div className="bg-[#fdf5dd] border-8 border-[#5c4613] rounded-[36px] p-6 max-w-sm w-full text-center shadow-2xl relative border-b-12 border-b-[#42310b] text-[#4c380b] animate-in fade-in zoom-in-95 duration-300">
+            <div className="text-5xl mb-4 animate-bounce drop-shadow-md">📱🔄</div>
+            <h2 className="text-xl font-black mb-2 text-[#4c380b] uppercase">แนะนำให้ใช้แนวนอน</h2>
+            <p className="text-sm font-bold text-amber-900 mb-6 leading-relaxed">
+              เพื่อประสบการณ์การเล่นเกมสืบสวนที่สมบูรณ์ที่สุดและไม่อึดอัด กรุณาหมุนโทรศัพท์ของคุณเป็นแนวนอน (Landscape)
+            </p>
+            <button 
+              onClick={() => setDismissPortraitWarning(true)}
+              className="w-full py-3 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white font-black rounded-xl shadow-md transition-all text-sm border-b-4 border-b-amber-800 active:translate-y-1 active:border-b-0 cursor-pointer"
+            >
+              รับทราบ / เล่นต่อในแนวตั้ง
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
