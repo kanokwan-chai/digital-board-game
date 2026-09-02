@@ -308,7 +308,7 @@ export default function App() {
       <button
         onClick={handleToggleMusic}
         title={bgMuted ? 'เปิดเพลงประกอบ' : 'ปิดเพลงประกอบ'}
-        className="fixed top-4 right-4 z-[999] w-10 h-10 flex items-center justify-center rounded-full bg-amber-900/80 hover:bg-amber-800 border-2 border-amber-400/60 shadow-lg text-amber-100 text-lg transition-all hover:scale-110 active:scale-95 cursor-pointer backdrop-blur-sm"
+        className="fixed bottom-4 right-4 z-[999] w-10 h-10 flex items-center justify-center rounded-full bg-amber-900/80 hover:bg-amber-800 border-2 border-amber-400/60 shadow-lg text-amber-100 text-lg transition-all hover:scale-110 active:scale-95 cursor-pointer backdrop-blur-sm"
       >
         {bgMuted ? '🔇' : '🎵'}
       </button>
@@ -465,7 +465,7 @@ export default function App() {
         </div>
       )}
       {/* Mobile Portrait Warning Overlay */}
-      <div className="fixed inset-0 z-[10000] bg-slate-950/95 backdrop-blur-md flex flex-col items-center justify-center p-8 text-center text-white landscape:hidden md:hidden">
+      <div className="fixed inset-0 z-[10000] bg-slate-950/95 backdrop-blur-md flex flex-col items-center justify-center p-8 text-center text-white landscape:hidden">
         <div className="text-7xl mb-6 animate-pulse">📱🔄</div>
         <h2 className="text-2xl font-black mb-3 text-amber-400">กรุณาหมุนจอเป็นแนวนอน</h2>
         <p className="text-sm font-bold text-slate-300 leading-relaxed max-w-xs">

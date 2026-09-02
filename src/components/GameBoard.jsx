@@ -31,8 +31,8 @@ export default function GameBoard({ levels, unlockedLevel, completedLevels, stud
       <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-amber-300/10 rounded-full filter blur-[100px] pointer-events-none animate-pulse"></div>
       <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-yellow-200/10 rounded-full filter blur-[120px] pointer-events-none animate-pulse"></div>
 
-      {/* Top HUD - Bright Magic Gold Wood Plaque */}
-      <div className="w-full max-w-5xl bg-gradient-to-r from-[#ebdcb8] to-[#f5ebd0] border-2 border-[#d4af37] rounded-3xl p-4 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 border-b-6 border-b-[#c2a65d] z-10 text-[#5c4613]">
+      {/* Top HUD */}
+      <div className="w-full max-w-5xl bg-gradient-to-r from-[#ebdcb8] to-[#f5ebd0] border-2 border-[#d4af37] rounded-2xl md:rounded-3xl p-3 md:p-4 flex flex-wrap items-center justify-center sm:justify-between gap-3 md:gap-4 mb-6 md:mb-8 shadow-xl border-b-6 border-b-[#c2a65d] z-10 text-[#5c4613]">
         
         {/* Left Profile */}
         <div className="flex items-center gap-3">

@@ -596,9 +596,9 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
       <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-yellow-200/10 rounded-full filter blur-[110px] pointer-events-none animate-pulse"></div>
 
       {/* Top HUD - Bright Wizard Gold Wood Plaque */}
-      <div className="w-full max-w-5xl bg-gradient-to-r from-[#ebdcb8] to-[#f5ebd0] border-2 border-[#d4af37] rounded-2xl md:rounded-3xl p-3 md:p-4 flex items-center justify-between gap-3 md:gap-4 mb-4 md:mb-6 shadow-xl border-b-6 border-b-[#c2a65d] z-10 text-[#5c4613]">
-        <div className="flex items-center gap-2 md:gap-3">
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-amber-400 bg-white overflow-hidden shadow-lg flex items-center justify-center p-0 relative">
+      <div className="w-full max-w-5xl bg-gradient-to-r from-[#ebdcb8] to-[#f5ebd0] border-2 border-[#d4af37] rounded-2xl md:rounded-3xl p-3 md:p-4 flex flex-wrap items-center justify-center sm:justify-between gap-3 md:gap-4 mb-4 md:mb-6 shadow-xl border-b-6 border-b-[#c2a65d] z-10 text-[#5c4613]">
+        <div className="flex items-center gap-2 md:gap-3 w-full sm:w-auto justify-center sm:justify-start">
+          <div className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-full border-2 border-amber-400 bg-white overflow-hidden shadow-lg flex items-center justify-center p-0 relative">
             {student.avatar_url ? (
               <img src={student.avatar_url} alt={student.name} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
             ) : student.character?.image ? (
@@ -610,11 +610,11 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
               {student.character?.ability}
             </div>
           </div>
-          <div>
-            <h2 className="text-xs md:text-sm font-black text-[#4c380b]">
+          <div className="min-w-0">
+            <h2 className="text-xs md:text-sm font-black text-[#4c380b] truncate">
               ผู้เรียน: <span className="text-[#8c530b] font-extrabold">{student.name}</span>
             </h2>
-            <p className="text-[#4c380b]/75 text-[10px] md:text-xs font-black tracking-wider truncate max-w-[180px]">
+            <p className="text-[#4c380b]/75 text-[10px] md:text-xs font-black tracking-wider truncate max-w-[120px] sm:max-w-[180px]">
               📧 {student.email || 'Google Account'}
             </p>
           </div>
@@ -632,7 +632,7 @@ export default function GameArea({ level, student, score, onUpdateScore, onReset
           )}
         </div>
 
-        <div className="flex items-center gap-2 md:gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 w-full sm:w-auto">
           <button
             type="button"
             onClick={() => {
