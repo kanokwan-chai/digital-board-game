@@ -40,7 +40,7 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['"Noto Sans Thai"', 'sans-serif'],
+        sans: ['Prompt', 'sans-serif'],
       }
     },
   },
